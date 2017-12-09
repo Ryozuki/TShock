@@ -17,15 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using Microsoft.Xna.Framework;
+using OTAPI.Tile;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Timers;
-using OTAPI.Tile;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -47,14 +46,17 @@ namespace TShockAPI
 		/// Disable the player and leave no messages
 		/// </summary>
 		None,
+
 		/// <summary>
 		/// Write the Disable message to the console
 		/// </summary>
 		WriteToConsole,
+
 		/// <summary>
 		/// Write the Disable message to the log
 		/// </summary>
 		WriteToLog,
+
 		/// <summary>
 		/// Equivalent to WriteToConsole | WriteToLog
 		/// </summary>
@@ -375,7 +377,7 @@ namespace TShockAPI
 			get
 			{
 				return RealPlayer
-				       && (Netplay.Clients[Index] != null && Netplay.Clients[Index].IsActive && !Netplay.Clients[Index].PendingTermination);
+					   && (Netplay.Clients[Index] != null && Netplay.Clients[Index].IsActive && !Netplay.Clients[Index].PendingTermination);
 			}
 		}
 
@@ -482,7 +484,6 @@ namespace TShockAPI
 				TShock.Log.Error(e.Message);
 				return false;
 			}
-
 		}
 
 		/// <summary>
@@ -869,7 +870,7 @@ namespace TShockAPI
 		public bool GiveItemCheck(int type, string name, int stack, int prefix = 0)
 		{
 			if ((TShock.Itembans.ItemIsBanned(name) && TShock.Config.PreventBannedItemSpawn) &&
-			    (TShock.Itembans.ItemIsBanned(name, this) || !TShock.Config.AllowAllowedGroupsToSpawnBannedItems))
+				(TShock.Itembans.ItemIsBanned(name, this) || !TShock.Config.AllowAllowedGroupsToSpawnBannedItems))
 				return false;
 
 			GiveItem(type, stack, prefix);
@@ -890,7 +891,7 @@ namespace TShockAPI
 		public bool GiveItemCheck(int type, string name, int width, int height, int stack, int prefix = 0)
 		{
 			if ((TShock.Itembans.ItemIsBanned(name) && TShock.Config.PreventBannedItemSpawn) &&
-			    (TShock.Itembans.ItemIsBanned(name, this) || !TShock.Config.AllowAllowedGroupsToSpawnBannedItems))
+				(TShock.Itembans.ItemIsBanned(name, this) || !TShock.Config.AllowAllowedGroupsToSpawnBannedItems))
 				return false;
 
 			GiveItem(type, name, width, height, stack, prefix);
@@ -1292,6 +1293,7 @@ namespace TShockAPI
 		{
 			return TShock.ProjectileBans.ProjectileIsBanned(bannedProj.ID, this);
 		}
+
 		/// <summary>
 		/// Checks to see if a player has permission to use the specific banned tile.
 		/// Fires the <see cref="PlayerHooks.OnPlayerTilebanPermission"/> hook which may be handled to override tile ban permission checks.

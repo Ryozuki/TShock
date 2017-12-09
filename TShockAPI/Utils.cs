@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,10 +27,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.Utilities;
 using TShockAPI.DB;
-using Microsoft.Xna.Framework;
-using Terraria.Localization;
 using TShockAPI.Localization;
 
 namespace TShockAPI
@@ -59,7 +59,7 @@ namespace TShockAPI
 		private Regex startOfLineColorRegex = new Regex(@"^\%\s*(?<r>\d{1,3})\s*,\s*(?<g>\d{1,3})\s*,\s*(?<b>\d{1,3})\s*\%");
 
 		/// <summary>Utils - Creates a utilities object.</summary>
-		private Utils() {}
+		private Utils() { }
 
 		/// <summary>Instance - An instance of the utils class.</summary>
 		/// <value>value - the Utils instance</value>
@@ -248,7 +248,7 @@ namespace TShockAPI
 		}
 
 		//Random should not be generated in a method
-		Random r = new Random();
+		private Random r = new Random();
 
 		/// <summary>
 		/// Gets a random clear tile in range
@@ -271,8 +271,8 @@ namespace TShockAPI
 					tileY = startTileY;
 					break;
 				}
-				tileX = startTileX + r.Next(tileXRange*-1, tileXRange);
-				tileY = startTileY + r.Next(tileYRange*-1, tileYRange);
+				tileX = startTileX + r.Next(tileXRange * -1, tileXRange);
+				tileY = startTileY + r.Next(tileYRange * -1, tileYRange);
 				j++;
 			} while (TilePlacementValid(tileX, tileY) && TileSolid(tileX, tileY));
 		}
@@ -314,7 +314,7 @@ namespace TShockAPI
 			{
 				if (type >= Main.maxItemTypes)
 					return new List<Item>();
-				return new List<Item> {GetItemById(type)};
+				return new List<Item> { GetItemById(type) };
 			}
 			Item item = GetItemFromTag(text);
 			if (item != null)
@@ -481,7 +481,7 @@ namespace TShockAPI
 			{
 				buffname = Lang.GetBuffName(i);
 				if (!String.IsNullOrWhiteSpace(buffname) && buffname.ToLower() == nameLower)
-					return new List<int> {i};
+					return new List<int> { i };
 			}
 			var found = new List<int>();
 			for (int i = 1; i < Main.maxBuffTypes; i++)
@@ -527,7 +527,7 @@ namespace TShockAPI
 			return found;
 		}
 
-				/// <summary>
+		/// <summary>
 		/// Gets a prefix by ID or name
 		/// </summary>
 		/// <param name="idOrName">ID or name</param>
@@ -537,7 +537,7 @@ namespace TShockAPI
 			int type = -1;
 			if (int.TryParse(idOrName, out type) && type >= FirstItemPrefix && type <= LastItemPrefix)
 			{
-				return new List<int> {type};
+				return new List<int> { type };
 			}
 			return GetPrefixByName(idOrName);
 		}
@@ -609,7 +609,7 @@ namespace TShockAPI
 			TShock.Regions.Reload();
 			TShock.Itembans.UpdateItemBans();
 			TShock.ProjectileBans.UpdateBans();
-    			TShock.TileBans.UpdateBans();
+			TShock.TileBans.UpdateBans();
 			Hooks.GeneralHooks.OnReloadEvent(player);
 		}
 
@@ -839,7 +839,7 @@ namespace TShockAPI
 					return TShock.Groups.groups[i];
 				}
 			}
-				return Group.DefaultGroup;
+			return Group.DefaultGroup;
 		}
 
 		/// <summary>
@@ -919,15 +919,19 @@ namespace TShockAPI
 						case 's':
 							seconds += num;
 							break;
+
 						case 'm':
 							seconds += num * 60;
 							break;
+
 						case 'h':
 							seconds += num * 60 * 60;
 							break;
+
 						case 'd':
 							seconds += num * 60 * 60 * 24;
 							break;
+
 						default:
 							return false;
 					}
@@ -1187,7 +1191,7 @@ namespace TShockAPI
 			}
 			points.Add(end);
 
-			#endregion
+			#endregion Tile Selection Logic stolen from Wiring.cs
 
 			return points;
 		}
@@ -1222,10 +1226,10 @@ namespace TShockAPI
 
 		internal void PrepareLangForDump()
 		{
-			for(int i = 0; i < Main.recipe.Length; i++)
+			for (int i = 0; i < Main.recipe.Length; i++)
 				Main.recipe[i] = new Recipe();
 		}
-		
+
 		// Dumps a matrix of all permissions and all groups in markdown format
 		// Hard coded to default groups because apparently we have poor querying tools
 		public void DumpPermissionMatrix(string path)
@@ -1252,12 +1256,12 @@ namespace TShockAPI
 			foreach (var field in typeof(Permissions).GetFields().OrderBy(f => f.Name))
 			{
 				output.Append("|");
-				output.Append((string) field.GetValue(null));
+				output.Append((string)field.GetValue(null));
 				output.Append("|");
 
 				foreach (Group g in TShock.Groups.groups)
 				{
-					if (g.HasPermission((string) field.GetValue(null)))
+					if (g.HasPermission((string)field.GetValue(null)))
 					{
 						output.Append("✔|");
 					}
@@ -1323,7 +1327,8 @@ namespace TShockAPI
 				item.SetDefaults(i);
 
 				string tt = "";
-				for (int x = 0; x < item.ToolTip.Lines; x++) {
+				for (int x = 0; x < item.ToolTip.Lines; x++)
+				{
 					tt += item.ToolTip.GetLine(x) + "\n";
 				}
 				if (!String.IsNullOrEmpty(item.Name))
@@ -1438,7 +1443,7 @@ namespace TShockAPI
 
 				if (!String.IsNullOrEmpty(prefix))
 				{
-					object[] element = new object[] {i, prefix};
+					object[] element = new object[] { i, prefix };
 					elements.Add(element);
 				}
 			}

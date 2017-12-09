@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Newtonsoft.Json;
+using Rests;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
-using Rests;
 
 namespace TShockAPI
 {
@@ -121,6 +121,7 @@ namespace TShockAPI
 		/// <summary>AutoSave - Whether or not to use Terraria's built-in world auto save.</summary>
 		[Description("Enable/disable Terraria's built in auto save.")]
 		public bool AutoSave = true;
+
 		/// <summary>AnnounceSave - Whether or not to broadcast world saves.</summary>
 		[Description("Enable/disable save announcements.")]
 		public bool AnnounceSave = true;
@@ -132,6 +133,7 @@ namespace TShockAPI
 		/// <summary>ServerName - Used when replying to a REST /status request or sent to the client.</summary>
 		[Description("Replaces the world name during a session if UseServerName is true.")]
 		public string ServerName = "";
+
 		/// <summary>UseServerName - Whether or not to use ServerName in place of the world name.</summary>
 		[Description("Sends ServerName in place of the world name to clients.")]
 		public bool UseServerName = false;
@@ -143,12 +145,15 @@ namespace TShockAPI
 		/// <summary>MySqlHost - The hostname and port to to use when connecting to a MySQL database.</summary>
 		[Description("The MySQL hostname and port to direct connections to.")]
 		public string MySqlHost = "localhost:3306";
+
 		/// <summary>MySqlDbName - The database name to use when connecting to a MySQL database.</summary>
 		[Description("Database name to connect to.")]
 		public string MySqlDbName = "";
+
 		/// <summary>MySqlUsername - The username for the login credentials used when connecting to a MySQL database.</summary>
 		[Description("Database username to connect with.")]
 		public string MySqlUsername = "";
+
 		/// <summary>MySqlPassword - The password for the login credentials used when connecting to a MySQL database.</summary>
 		[Description("Database password to connect with.")]
 		public string MySqlPassword = "";
@@ -156,6 +161,7 @@ namespace TShockAPI
 		/// <summary>MediumcoreBanReason - The reason given if banning mediumcore players on death.</summary>
 		[Description("The reason given when banning a mediumcore player on death if BanOnMediumcoreDeath is set to true.")]
 		public string MediumcoreBanReason = "Death results in a ban";
+
 		/// <summary>MediumcoreKickReason - The reason given if kicking mediumcore players on death.</summary>
 		[Description("The reason given when kicking a mediumcore player on death if KickOnMediumcoreDeath is set to true.")]
 		public string MediumcoreKickReason = "Death results in a kick";

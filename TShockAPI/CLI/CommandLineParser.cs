@@ -259,7 +259,7 @@ namespace TShockAPI.CLI
 			{
 				//Null result shouldn't happen, but return false if it does
 				value = default(T);
-				return false; 
+				return false;
 			}
 
 			Type t = typeof(T);

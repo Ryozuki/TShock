@@ -17,18 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using TerrariaApi.Server;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Net.Http;
-using System.Threading.Tasks;
 using TShockAPI.Extensions;
-using System.IO;
-using System.Text.RegularExpressions;
 
 namespace TShockAPI
 {
@@ -44,12 +44,13 @@ namespace TShockAPI
 		/// <returns></returns>
 		[DllImport("kernel32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
-		static extern bool GetPhysicallyInstalledSystemMemory(out long totalMemInKb);
+		private static extern bool GetPhysicallyInstalledSystemMemory(out long totalMemInKb);
 
 		/// <summary>
 		/// A provider token set on the command line. Used by the stats server to group providers
 		/// </summary>
 		public string ProviderToken = "";
+
 		/// <summary>
 		/// Whether or not to opt out of stat tracking
 		/// </summary>
@@ -225,7 +226,7 @@ namespace TShockAPI
 		{
 			if (totalMem != 0)
 			{
-				return totalMem; //Return early 
+				return totalMem; //Return early
 			}
 
 			if (isMono) //Set totalMem so it can be returned later
@@ -242,8 +243,9 @@ namespace TShockAPI
 			return totalMem;
 		}
 	}
+
 	/// <summary>
-	/// Holding information regarding loaded plugins 
+	/// Holding information regarding loaded plugins
 	/// </summary>
 	public struct PluginItem
 	{
@@ -251,12 +253,14 @@ namespace TShockAPI
 		/// Plugin name
 		/// </summary>
 		public string name;
+
 		/// <summary>
-		/// Assembly version 
+		/// Assembly version
 		/// </summary>
 		public string version;
+
 		/// <summary>
-		/// Api version or UNKNOWN if attribute is missing, which is currently impossible 
+		/// Api version or UNKNOWN if attribute is missing, which is currently impossible
 		/// </summary>
 		public string apiVersion;
 	}
@@ -270,42 +274,52 @@ namespace TShockAPI
 		/// The port the server is running on
 		/// </summary>
 		public int port;
+
 		/// <summary>
 		/// The number of players currently on the server
 		/// </summary>
 		public int currentPlayers;
+
 		/// <summary>
 		/// The maximum number of player slots available on the server
 		/// </summary>
 		public int maxPlayers;
+
 		/// <summary>
 		/// The amount of RAM installed on the server's host PC
 		/// </summary>
 		public long systemRam;
+
 		/// <summary>
 		/// The TShock version being used by the server
 		/// </summary>
 		public string version;
+
 		/// <summary>
-		/// Whether or not server was started with --ignoreversion 
+		/// Whether or not server was started with --ignoreversion
 		/// </summary>
 		public bool ignorePluginVersion;
+
 		/// <summary>
 		/// List of loaded plugins and version name:
 		/// </summary>
 		public PluginItem[] loadedPlugins;
+
 		/// <summary>
 		/// The Terraria version supported by the server
 		/// </summary>
 		public string terrariaVersion;
+
 		/// <summary>
 		/// The provider ID set for the server
 		/// </summary>
 		public string providerId;
+
 		/// <summary>
 		/// The server ID set for the server
 		/// </summary>
 		public string serverId;
+
 		/// <summary>
 		/// Whether or not the server is running with Mono
 		/// </summary>

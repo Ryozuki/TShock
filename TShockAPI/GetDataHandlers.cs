@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Microsoft.Xna.Framework;
+using OTAPI.Tile;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,19 +25,15 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Streams;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ID;
-using TShockAPI.DB;
-using TShockAPI.Net;
 using Terraria;
-using Terraria.ObjectData;
 using Terraria.DataStructures;
 using Terraria.GameContent.Tile_Entities;
+using Terraria.ID;
 using Terraria.Localization;
-using Microsoft.Xna.Framework;
-using OTAPI.Tile;
+using Terraria.ObjectData;
+using TShockAPI.DB;
 using TShockAPI.Localization;
+using TShockAPI.Net;
 
 namespace TShockAPI
 {
@@ -62,6 +60,7 @@ namespace TShockAPI
 	{
 		private static Dictionary<PacketTypes, GetDataHandlerDelegate> GetDataHandlerDelegates;
 		public static int[] WhitelistBuffMaxTime;
+
 		#region Events
 
 		/// <summary>
@@ -88,6 +87,7 @@ namespace TShockAPI
 			/// The Tile ID being edited.
 			/// </summary>
 			public short EditData { get; set; }
+
 			/// <summary>
 			/// The EditType.
 			/// (KillTile = 0, PlaceTile = 1, KillWall = 2, PlaceWall = 3, KillTileNoItem = 4, PlaceWire = 5, KillWire = 6)
@@ -109,6 +109,7 @@ namespace TShockAPI
 		/// TileEdit - called when a tile is placed or destroyed
 		/// </summary>
 		public static HandlerList<TileEditEventArgs> TileEdit;
+
 		private static bool OnTileEdit(TSPlayer ply, int x, int y, EditAction action, EditType editDetail, short editData, byte style)
 		{
 			if (TileEdit == null)
@@ -127,6 +128,7 @@ namespace TShockAPI
 			TileEdit.Invoke(null, args);
 			return args.Handled;
 		}
+
 		/// <summary>
 		/// For use in a TogglePvp event
 		/// </summary>
@@ -136,15 +138,18 @@ namespace TShockAPI
 			/// The Terraria player ID of the player
 			/// </summary>
 			public byte PlayerId { get; set; }
+
 			/// <summary>
 			/// Enable/disable pvp?
 			/// </summary>
 			public bool Pvp { get; set; }
 		}
+
 		/// <summary>
 		/// TogglePvp - called when a player toggles pvp
 		/// </summary>
 		public static HandlerList<TogglePvpEventArgs> TogglePvp;
+
 		private static bool OnPvpToggled(byte _id, bool _pvp)
 		{
 			if (TogglePvp == null)
@@ -168,15 +173,18 @@ namespace TShockAPI
 			/// The Terraria player ID of the player
 			/// </summary>
 			public byte PlayerId { get; set; }
+
 			/// <summary>
 			/// Enable/disable pvp?
 			/// </summary>
 			public byte Team { get; set; }
 		}
+
 		/// <summary>
 		/// TogglePvp - called when a player toggles pvp
 		/// </summary>
 		public static HandlerList<PlayerTeamEventArgs> PlayerTeam;
+
 		private static bool OnPlayerTeam(byte _id, byte _team)
 		{
 			if (PlayerTeam == null)
@@ -200,27 +208,33 @@ namespace TShockAPI
 			/// The Terraria playerID
 			/// </summary>
 			public byte PlayerId { get; set; }
+
 			/// <summary>
 			/// The slot edited
 			/// </summary>
 			public byte Slot { get; set; }
+
 			/// <summary>
 			/// The stack edited
 			/// </summary>
 			public short Stack { get; set; }
+
 			/// <summary>
 			/// The item prefix
 			/// </summary>
 			public byte Prefix { get; set; }
+
 			/// <summary>
 			/// Item type
 			/// </summary>
 			public short Type { get; set; }
 		}
+
 		/// <summary>
 		/// PlayerSlot - called at a PlayerSlot event
 		/// </summary>
 		public static HandlerList<PlayerSlotEventArgs> PlayerSlot;
+
 		private static bool OnPlayerSlot(byte _plr, byte _slot, short _stack, byte _prefix, short _type)
 		{
 			if (PlayerSlot == null)
@@ -247,15 +261,18 @@ namespace TShockAPI
 			/// The Terraria playerID of the player
 			/// </summary>
 			public byte PlayerId { get; set; }
+
 			/// <summary>
 			/// Current HP
 			/// </summary>
 			public short Current { get; set; }
+
 			/// <summary>
 			/// Maximum HP
 			/// </summary>
 			public short Max { get; set; }
 		}
+
 		/// <summary>
 		/// PlayerHP - called at a PlayerHP event
 		/// </summary>
@@ -285,6 +302,7 @@ namespace TShockAPI
 			public short Current { get; set; }
 			public short Max { get; set; }
 		}
+
 		/// <summary>
 		/// PlayerMana - called at a PlayerMana event
 		/// </summary>
@@ -311,23 +329,28 @@ namespace TShockAPI
 			/// The Terraria playerID of the player
 			/// </summary>
 			public byte PlayerId { get; set; }
+
 			/// <summary>
 			/// Hair color
 			/// </summary>
 			public byte Hair { get; set; }
+
 			/// <summary>
 			/// Clothing style. 0-3 are for male characters, and 4-7 are for female characters.
 			/// </summary>
 			public int Style { get; set; }
+
 			/// <summary>
 			/// Character difficulty
 			/// </summary>
 			public byte Difficulty { get; set; }
+
 			/// <summary>
 			/// Player/character name
 			/// </summary>
 			public string Name { get; set; }
 		}
+
 		/// <summary>
 		/// PlayerInfo - called at a PlayerInfo event
 		/// If this is cancelled, the server will ForceKick the player. If this should be changed in the future, let someone know.
@@ -360,11 +383,13 @@ namespace TShockAPI
 			/// The X coordinate that is being killed
 			/// </summary>
 			public int TileX { get; set; }
+
 			/// <summary>
 			/// The Y coordinate that is being killed
 			/// </summary>
 			public int TileY { get; set; }
 		}
+
 		/// <summary>
 		/// TileKill - When a tile is removed from the world
 		/// </summary>
@@ -393,19 +418,23 @@ namespace TShockAPI
 			/// The Terraria playerID of the player
 			/// </summary>
 			public byte PlayerId { get; set; }
+
 			/// <summary>
 			/// The direction the damage is coming from (?)
 			/// </summary>
 			public byte Direction { get; set; }
+
 			/// <summary>
 			/// Amount of damage delt
 			/// </summary>
 			public short Damage { get; set; }
+
 			/// <summary>
 			/// Player's current pvp setting
 			/// </summary>
 			public bool Pvp { get; set; }
 		}
+
 		/// <summary>
 		/// KillMe - Terraria's crappy way of handling damage from players
 		/// </summary>
@@ -436,18 +465,22 @@ namespace TShockAPI
 			/// The Terraria playerID of the player
 			/// </summary>
 			public byte PlayerId { get; set; }
+
 			/// <summary>
 			/// ???
 			/// </summary>
 			public byte Control { get; set; }
+
 			/// <summary>
 			/// Current item?
 			/// </summary>
 			public byte Item { get; set; }
+
 			/// <summary>
 			/// Position of the player
 			/// </summary>
 			public Vector2 Position { get; set; }
+
 			/// <summary>
 			/// Velocity of the player
 			/// </summary>
@@ -455,6 +488,7 @@ namespace TShockAPI
 
 			public byte Pulley { get; set; }
 		}
+
 		/// <summary>
 		/// PlayerUpdate - When the player sends it's updated information to the server
 		/// </summary>
@@ -477,6 +511,7 @@ namespace TShockAPI
 			PlayerUpdate.Invoke(null, args);
 			return args.Handled;
 		}
+
 		public static bool TSCheckNoclip(Vector2 Position, int Width, int Height)
 		{
 			int num = (int)(Position.X / 16f);
@@ -541,15 +576,18 @@ namespace TShockAPI
 			/// Size of the area
 			/// </summary>
 			public short Size { get; set; }
+
 			/// <summary>
 			/// A corner of the section
 			/// </summary>
 			public int TileX { get; set; }
+
 			/// <summary>
 			/// A corner of the section
 			/// </summary>
 			public int TileY { get; set; }
 		}
+
 		/// <summary>
 		/// SendTileSquare - When the player sends a tile square
 		/// </summary>
@@ -569,6 +607,7 @@ namespace TShockAPI
 			SendTileSquare.Invoke(null, args);
 			return args.Handled;
 		}
+
 		/// <summary>
 		/// For use in a NewProjectile event
 		/// </summary>
@@ -578,35 +617,43 @@ namespace TShockAPI
 			/// ???
 			/// </summary>
 			public short Identity { get; set; }
+
 			/// <summary>
 			/// Location of the projectile
 			/// </summary>
 			public Vector2 Position { get; set; }
+
 			/// <summary>
 			/// Velocity of the projectile
 			/// </summary>
 			public Vector2 Velocity { get; set; }
+
 			/// <summary>
 			/// Knockback
 			/// </summary>
 			public float Knockback { get; set; }
+
 			/// <summary>
 			/// Damage from the projectile
 			/// </summary>
 			public short Damage { get; set; }
+
 			/// <summary>
 			/// Terraria playerID owner of the projectile
 			/// </summary>
 			public byte Owner { get; set; }
+
 			/// <summary>
 			/// Type of projectile
 			/// </summary>
 			public short Type { get; set; }
+
 			/// <summary>
 			/// ???
 			/// </summary>
 			public int Index { get; set; }
 		}
+
 		/// <summary>
 		/// NewProjectile - Called when a client creates a new projectile
 		/// </summary>
@@ -641,19 +688,23 @@ namespace TShockAPI
 			/// X location of the tile
 			/// </summary>
 			public int TileX { get; set; }
+
 			/// <summary>
 			/// Y location of the tile
 			/// </summary>
 			public int TileY { get; set; }
+
 			/// <summary>
 			/// Amount of liquid
 			/// </summary>
 			public byte Amount { get; set; }
+
 			/// <summary>
 			/// Type of Liquid: 0=water, 1=lave, 2=honey
 			/// </summary>
 			public byte Type { get; set; }
 		}
+
 		/// <summary>
 		/// LiquidSet - When ever a liquid is set
 		/// </summary>
@@ -674,6 +725,7 @@ namespace TShockAPI
 			LiquidSet.Invoke(null, args);
 			return args.Handled;
 		}
+
 		/// <summary>
 		/// For use in a PlayerSpawn event
 		/// </summary>
@@ -683,15 +735,18 @@ namespace TShockAPI
 			/// The Terraria playerID of the player
 			/// </summary>
 			public byte Player { get; set; }
+
 			/// <summary>
 			/// X location of the player's spawn
 			/// </summary>
 			public int SpawnX { get; set; }
+
 			/// <summary>
 			/// Y location of the player's spawn
 			/// </summary>
 			public int SpawnY { get; set; }
 		}
+
 		/// <summary>
 		/// PlayerSpawn - When a player spawns
 		/// </summary>
@@ -711,6 +766,7 @@ namespace TShockAPI
 			PlayerSpawn.Invoke(null, args);
 			return args.Handled;
 		}
+
 		/// <summary>
 		/// For use with a ChestOpen event
 		/// </summary>
@@ -720,6 +776,7 @@ namespace TShockAPI
 			/// X location of said chest
 			/// </summary>
 			public int X { get; set; }
+
 			/// <summary>
 			/// Y location of said chest
 			/// </summary>
@@ -730,6 +787,7 @@ namespace TShockAPI
 			/// </summary>
 			public TSPlayer Player { get; set; }
 		}
+
 		/// <summary>
 		/// ChestOpen - Called when any chest is opened
 		/// </summary>
@@ -759,23 +817,28 @@ namespace TShockAPI
 			/// ChestID
 			/// </summary>
 			public short ID { get; set; }
+
 			/// <summary>
 			/// Slot of the item
 			/// </summary>
 			public byte Slot { get; set; }
+
 			/// <summary>
 			/// How many?
 			/// </summary>
 			public short Stacks { get; set; }
+
 			/// <summary>
 			/// Item prefix
 			/// </summary>
 			public byte Prefix { get; set; }
+
 			/// <summary>
 			/// Item type
 			/// </summary>
 			public short Type { get; set; }
 		}
+
 		/// <summary>
 		/// ChestItemChange - Called when an item in a chest changes
 		/// </summary>
@@ -807,15 +870,18 @@ namespace TShockAPI
 			/// The Terraria playerID of the player
 			/// </summary>
 			public short ID { get; set; }
+
 			/// <summary>
 			/// X location of the sign
 			/// </summary>
 			public int X { get; set; }
+
 			/// <summary>
 			/// Y location of the sign
 			/// </summary>
 			public int Y { get; set; }
 		}
+
 		/// <summary>
 		/// Sign - Called when a sign is changed
 		/// </summary>
@@ -845,19 +911,23 @@ namespace TShockAPI
 			/// The Terraria playerID of the player
 			/// </summary>
 			public short ID { get; set; }
+
 			/// <summary>
 			/// X location of the NPC home change
 			/// </summary>
 			public short X { get; set; }
+
 			/// <summary>
 			/// Y location of the NPC home change
 			/// </summary>
 			public short Y { get; set; }
+
 			/// <summary>
 			/// ByteBool homeless
 			/// </summary>
 			public byte Homeless { get; set; }
 		}
+
 		/// <summary>
 		/// NPCHome - Called when an NPC's home is changed
 		/// </summary>
@@ -888,15 +958,18 @@ namespace TShockAPI
 			/// The Terraria playerID of the player
 			/// </summary>
 			public byte ID { get; set; }
+
 			/// <summary>
 			/// Buff Type
 			/// </summary>
 			public byte Type { get; set; }
+
 			/// <summary>
 			/// Time the buff lasts
 			/// </summary>
 			public int Time { get; set; }
 		}
+
 		/// <summary>
 		/// PlayerBuff - Called when a player is buffed
 		/// </summary>
@@ -926,36 +999,44 @@ namespace TShockAPI
 			/// The player who sent message
 			/// </summary>
 			public TSPlayer Player { get; set; }
+
 			/// <summary>
 			/// ID of the item.
 			/// If below 400 and NetID(Type) is 0 Then Set Null. If ItemID is 400 Then New Item
 			/// </summary>
 			public short ID { get; set; }
+
 			/// <summary>
 			/// Position of the item
 			/// </summary>
 			public Vector2 Position { get; set; }
+
 			/// <summary>
 			/// Velocity at which the item is deployed
 			/// </summary>
 			public Vector2 Velocity { get; set; }
+
 			/// <summary>
 			/// Stacks
 			/// </summary>
 			public short Stacks { get; set; }
+
 			/// <summary>
 			/// Prefix of the item
 			/// </summary>
 			public byte Prefix { get; set; }
+
 			/// <summary>
 			/// No Delay on pickup
 			/// </summary>
 			public bool NoDelay { get; set; }
+
 			/// <summary>
 			/// Item type
 			/// </summary>
 			public short Type { get; set; }
 		}
+
 		/// <summary>
 		/// ItemDrop - Called when an item is dropped
 		/// </summary>
@@ -990,23 +1071,28 @@ namespace TShockAPI
 			/// The Terraria playerID of the player
 			/// </summary>
 			public byte ID { get; set; }
+
 			/// <summary>
 			/// The direction the damage is occuring from
 			/// </summary>
 			public byte Direction { get; set; }
+
 			/// <summary>
 			/// Amount of damage
 			/// </summary>
 			public short Damage { get; set; }
+
 			/// <summary>
 			/// If the player has PVP on
 			/// </summary>
 			public bool PVP { get; set; }
+
 			/// <summary>
 			/// Is the damage critical?
 			/// </summary>
 			public bool Critical { get; set; }
 		}
+
 		/// <summary>
 		/// PlayerDamage - Called when a player is damaged
 		/// </summary>
@@ -1038,23 +1124,28 @@ namespace TShockAPI
 			/// ???
 			/// </summary>
 			public short ID { get; set; }
+
 			/// <summary>
 			/// Direction the damage occurred from
 			/// </summary>
 			public byte Direction { get; set; }
+
 			/// <summary>
 			/// Amount of damage
 			/// </summary>
 			public short Damage { get; set; }
+
 			/// <summary>
 			/// Knockback
 			/// </summary>
 			public float Knockback { get; set; }
+
 			/// <summary>
 			/// Critical?
 			/// </summary>
 			public byte Critical { get; set; }
 		}
+
 		/// <summary>
 		/// NPCStrike - Called when an NPC is attacked
 		/// </summary>
@@ -1086,11 +1177,13 @@ namespace TShockAPI
 			/// ???
 			/// </summary>
 			public byte ID { get; set; }
+
 			/// <summary>
 			/// Type...?
 			/// </summary>
 			public byte Type { get; set; }
 		}
+
 		/// <summary>
 		/// NPCSpecial - Called at some point
 		/// </summary>
@@ -1142,6 +1235,7 @@ namespace TShockAPI
 			/// </summary>
 			public byte ID { get; set; }
 		}
+
 		/// <summary>
 		/// PlayerBuffUpdate - Called when a player updates buffs
 		/// </summary>
@@ -1169,6 +1263,7 @@ namespace TShockAPI
 			/// ???
 			/// </summary>
 			public Int16 ID { get; set; }
+
 			/// <summary>
 			/// Flag is a bit field
 			///   if the first bit is set -> 0 = player, 1 = NPC
@@ -1177,15 +1272,18 @@ namespace TShockAPI
 			///   if the fourth bit is set, style +1
 			/// </summary>
 			public byte Flag { get; set; }
+
 			/// <summary>
 			/// X Location
 			/// </summary>
 			public float X { get; set; }
+
 			/// <summary>
 			/// Y Location
 			/// </summary>
 			public float Y { get; set; }
 		}
+
 		/// <summary>
 		/// NPCStrike - Called when an NPC is attacked
 		/// </summary>
@@ -1207,7 +1305,8 @@ namespace TShockAPI
 			return args.Handled;
 		}
 
-		#endregion
+		#endregion Events
+
 		public static void InitGetDataHandler()
 		{
 			#region Blacklists
@@ -1629,7 +1728,6 @@ namespace TShockAPI
 					if (args.Player.HasPermission(Permissions.usebanneditem))
 						args.Player.IgnoreActionsForDisabledArmor = "none";
 
-
 					args.Player.SendMessage("Authenticated as " + args.Player.Name + " successfully.", Color.LimeGreen);
 					TShock.Log.ConsoleInfo(args.Player.Name + " authenticated successfully as user " + args.Player.Name + ".");
 					TShock.UserAccounts.SetUserAccountUUID(account, args.Player.UUID);
@@ -1820,7 +1918,7 @@ namespace TShockAPI
 							changed = true;
 						}
 						// Sensors
-						if(newtile.Type == TileID.LogicSensor && !Main.tile[realx, realy].active())
+						if (newtile.Type == TileID.LogicSensor && !Main.tile[realx, realy].active())
 						{
 							Main.tile[realx, realy].type = newtile.Type;
 							Main.tile[realx, realy].frameX = newtile.FrameX;
@@ -1865,7 +1963,7 @@ namespace TShockAPI
 
 						if ((tile.type == TileID.TrapdoorClosed && (newtile.Type == TileID.TrapdoorOpen || !newtile.Active)) ||
 							(tile.type == TileID.TrapdoorOpen && (newtile.Type == TileID.TrapdoorClosed || !newtile.Active)) ||
-							(!tile.active() && newtile.Active && (newtile.Type == TileID.TrapdoorOpen||newtile.Type == TileID.TrapdoorClosed)))
+							(!tile.active() && newtile.Active && (newtile.Type == TileID.TrapdoorOpen || newtile.Type == TileID.TrapdoorClosed)))
 						{
 							Main.tile[realx, realy].type = newtile.Type;
 							Main.tile[realx, realy].frameX = newtile.FrameX;
@@ -1914,6 +2012,7 @@ namespace TShockAPI
 			PlaceWire4,
 			KillWire4
 		}
+
 		public enum EditType
 		{
 			Fail = 0,
@@ -1941,10 +2040,12 @@ namespace TShockAPI
 			TileID.WaterCandle,
 			TileID.Womannequin,
 		};
+
 		/// <summary>
 		/// The maximum place styles for each tile.
 		/// </summary>
 		public static Dictionary<int, int> MaxPlaceStyles = new Dictionary<int, int>();
+
 		/// <summary>
 		/// These projectiles create tiles on death.
 		/// </summary>
@@ -2304,7 +2405,6 @@ namespace TShockAPI
 			}
 		}
 
-
 		/// <summary>
 		/// Handle PlaceObject event
 		/// </summary>
@@ -2352,8 +2452,8 @@ namespace TShockAPI
 				return true;
 			}
 
-			// This is neccessary to check in order to prevent special tiles such as 
-			// queen bee larva, paintings etc that use this packet from being placed 
+			// This is neccessary to check in order to prevent special tiles such as
+			// queen bee larva, paintings etc that use this packet from being placed
 			// without selecting the right item.
 			if (type != args.TPlayer.inventory[args.TPlayer.selectedItem].createTile)
 			{
@@ -2419,15 +2519,18 @@ namespace TShockAPI
 			/// X Location
 			/// </summary>
 			public Int32 X { get; set; }
+
 			/// <summary>
 			/// Y Location
 			/// </summary>
 			public Int32 Y { get; set; }
+
 			/// <summary>
 			/// Type
 			/// </summary>
 			public byte type { get; set; }
 		}
+
 		/// <summary>
 		/// NPCStrike - Called when an NPC is attacked
 		/// </summary>
@@ -2448,7 +2551,6 @@ namespace TShockAPI
 			return args.Handled;
 		}
 
-
 		/// <summary>
 		/// For use with a PaintWall event
 		/// </summary>
@@ -2458,15 +2560,18 @@ namespace TShockAPI
 			/// X Location
 			/// </summary>
 			public Int32 X { get; set; }
+
 			/// <summary>
 			/// Y Location
 			/// </summary>
 			public Int32 Y { get; set; }
+
 			/// <summary>
 			/// Type
 			/// </summary>
 			public byte type { get; set; }
 		}
+
 		/// <summary>
 		/// Called When a wall is painted
 		/// </summary>
@@ -2708,7 +2813,6 @@ namespace TShockAPI
 				args.TPlayer.direction = -1;
 			}
 
-
 			if (args.Player.Confused && Main.ServerSideCharacter && args.Player.IsLoggedIn)
 			{
 				if (args.TPlayer.controlUp)
@@ -2732,7 +2836,6 @@ namespace TShockAPI
 					args.TPlayer.controlRight = false;
 					args.TPlayer.controlLeft = true;
 				}
-
 
 				args.TPlayer.Update(args.TPlayer.whoAmI);
 				NetMessage.SendData((int)PacketTypes.PlayerUpdate, -1, -1, NetworkText.Empty, args.Player.Index);
@@ -2763,7 +2866,6 @@ namespace TShockAPI
 				else
 					ai[i] = 0f;
 			}
-
 
 			var index = TShock.Utils.SearchProjectile(ident, owner);
 
@@ -3249,14 +3351,12 @@ namespace TShockAPI
 
 			if ((Main.ServerSideCharacter) && (args.Player.sX > 0) && (args.Player.sY > 0) && (args.TPlayer.SpawnX > 0) && ((args.TPlayer.SpawnX != args.Player.sX) && (args.TPlayer.SpawnY != args.Player.sY)))
 			{
-
 				args.Player.sX = args.TPlayer.SpawnX;
 				args.Player.sY = args.TPlayer.SpawnY;
 
 				if (((Main.tile[args.Player.sX, args.Player.sY - 1].active() && Main.tile[args.Player.sX, args.Player.sY - 1].type == 79)) && (WorldGen.StartRoomCheck(args.Player.sX, args.Player.sY - 1)))
 					args.Player.Teleport(args.Player.sX * 16, (args.Player.sY * 16) - 48);
 			}
-
 			else if ((Main.ServerSideCharacter) && (args.Player.sX > 0) && (args.Player.sY > 0))
 			{
 				if (((Main.tile[args.Player.sX, args.Player.sY - 1].active() && Main.tile[args.Player.sX, args.Player.sY - 1].type == 79)) && (WorldGen.StartRoomCheck(args.Player.sX, args.Player.sY - 1)))
@@ -3536,7 +3636,6 @@ namespace TShockAPI
 				TShock.Log.ConsoleInfo("Player {0} tried to sneak {1} onto the server!", args.Player.Name, item.Name);
 				args.Player.SendData(PacketTypes.ItemDrop, "", id);
 				return true;
-
 			}
 			if (TShock.CheckIgnores(args.Player))
 			{
@@ -3844,7 +3943,6 @@ namespace TShockAPI
 				}
 			}
 
-
 			NetMessage.SendData((int)PacketTypes.PlayerBuff, -1, args.Player.Index, NetworkText.Empty, args.Player.Index);
 			return true;
 		}
@@ -3877,6 +3975,7 @@ namespace TShockAPI
 					case -8:
 						invasion = true;
 						break;
+
 					case 4:
 					case 13:
 					case 50:
@@ -3925,27 +4024,35 @@ namespace TShockAPI
 				case -8:
 					boss = "a Moon Lord";
 					break;
+
 				case -7:
 					boss = "a Martian invasion";
 					break;
+
 				case -6:
 					boss = "an eclipse";
 					break;
+
 				case -5:
 					boss = "a frost moon";
 					break;
+
 				case -4:
 					boss = "a pumpkin moon";
 					break;
+
 				case -3:
 					boss = "the Pirates";
 					break;
+
 				case -2:
 					boss = "the Snow Legion";
 					break;
+
 				case -1:
 					boss = "a Goblin Invasion";
 					break;
+
 				default:
 					boss = String.Format("the {0}", npc.FullName);
 					break;
@@ -4197,10 +4304,12 @@ namespace TShockAPI
 			/// X Location
 			/// </summary>
 			public Int32 X { get; set; }
+
 			/// <summary>
 			/// Y Location
 			/// </summary>
 			public Int32 Y { get; set; }
+
 			/// <summary>
 			/// On status
 			/// </summary>

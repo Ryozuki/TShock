@@ -16,13 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Microsoft.Xna.Framework;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using MySql.Data.MySqlClient;
 using Terraria;
-using Microsoft.Xna.Framework;
 
 namespace TShockAPI.DB
 {
@@ -39,22 +39,22 @@ namespace TShockAPI.DB
 		{
 			database = db;
 			var table = new SqlTable("Regions",
-									 new SqlColumn("Id", MySqlDbType.Int32) {Primary = true, AutoIncrement = true},
+									 new SqlColumn("Id", MySqlDbType.Int32) { Primary = true, AutoIncrement = true },
 									 new SqlColumn("X1", MySqlDbType.Int32),
 									 new SqlColumn("Y1", MySqlDbType.Int32),
 									 new SqlColumn("width", MySqlDbType.Int32),
 									 new SqlColumn("height", MySqlDbType.Int32),
-									 new SqlColumn("RegionName", MySqlDbType.VarChar, 50) {Unique = true},
+									 new SqlColumn("RegionName", MySqlDbType.VarChar, 50) { Unique = true },
 									 new SqlColumn("WorldID", MySqlDbType.VarChar, 50) { Unique = true },
 									 new SqlColumn("UserIds", MySqlDbType.Text),
 									 new SqlColumn("Protected", MySqlDbType.Int32),
 									 new SqlColumn("Groups", MySqlDbType.Text),
 									 new SqlColumn("Owner", MySqlDbType.VarChar, 50),
-									 new SqlColumn("Z", MySqlDbType.Int32){ DefaultValue = "0" }
+									 new SqlColumn("Z", MySqlDbType.Int32) { DefaultValue = "0" }
 				);
 			var creator = new SqlTableCreator(db,
 											  db.GetSqlType() == SqlType.Sqlite
-											  	? (IQueryBuilder) new SqliteQueryCreator()
+											  	? (IQueryBuilder)new SqliteQueryCreator()
 											  	: new MysqlQueryCreator());
 			creator.EnsureTableStructure(table);
 		}
@@ -83,7 +83,7 @@ namespace TShockAPI.DB
 						string groups = reader.Get<string>("Groups");
 						int z = reader.Get<int>("Z");
 
-						string[] splitids = mergedids.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+						string[] splitids = mergedids.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
 						Region r = new Region(id, new Rectangle(X1, Y1, width, height), name, owner, Protected != 0, Main.worldID.ToString(), z);
 						r.SetAllowedGroups(groups);
@@ -280,7 +280,7 @@ namespace TShockAPI.DB
 				if (region.InArea(x, y))
 				{
 					if (top == null || region.Z > top.Z)
-						top = region;	
+						top = region;
 				}
 			}
 			return top == null || top.HasPermissionToBuildInRegion(ply);
@@ -310,7 +310,7 @@ namespace TShockAPI.DB
 		}
 
 		/// <summary>
-		/// Checks if any regions exist at the given (x, y) coordinate 
+		/// Checks if any regions exist at the given (x, y) coordinate
 		/// and returns an IEnumerable containing their IDs
 		/// </summary>
 		/// <param name="x">X coordinate</param>
@@ -374,20 +374,24 @@ namespace TShockAPI.DB
 						Y -= addAmount;
 						height += addAmount;
 						break;
+
 					case 1:
 						width += addAmount;
 						break;
+
 					case 2:
 						height += addAmount;
 						break;
+
 					case 3:
 						X -= addAmount;
 						width += addAmount;
 						break;
+
 					default:
 						return false;
 				}
-				
+
 				foreach (var region in Regions.Where(r => r.Name == regionName))
 					region.Area = new Rectangle(X, Y, width, height);
 				int q = database.Query("UPDATE Regions SET X1 = @0, Y1 = @1, width = @2, height = @3 WHERE RegionName = @4 AND WorldID=@5", X, Y, width,
@@ -401,7 +405,7 @@ namespace TShockAPI.DB
 			}
 			return false;
 		}
-		
+
 		/// <summary>
 		/// Renames a region
 		/// </summary>
@@ -435,7 +439,7 @@ namespace TShockAPI.DB
 
 			return result;
 		}
-		
+
 		/// <summary>
 		/// Removes an allowed user from a region
 		/// </summary>
@@ -546,7 +550,7 @@ namespace TShockAPI.DB
 				using (var reader = database.QueryReader("SELECT RegionName FROM Regions WHERE WorldID=@0", worldid))
 				{
 					while (reader.Read())
-						regions.Add(new Region {Name = reader.Get<string>("RegionName")});
+						regions.Add(new Region { Name = reader.Get<string>("RegionName") });
 				}
 			}
 			catch (Exception ex)
@@ -766,7 +770,7 @@ namespace TShockAPI.DB
 			*/
 			return x >= Area.X && x <= Area.X + Area.Width && y >= Area.Y && y <= Area.Y + Area.Height;
 		}
-		
+
 		/// <summary>
 		/// Checks if a given player has permission to build in the region
 		/// </summary>

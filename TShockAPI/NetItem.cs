@@ -16,11 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
+using System;
 using Terraria;
 
 namespace TShockAPI
@@ -93,8 +90,10 @@ namespace TShockAPI
 
 		[JsonProperty("netID")]
 		private int _netId;
+
 		[JsonProperty("prefix")]
 		private byte _prefixId;
+
 		[JsonProperty("stack")]
 		private int _stack;
 

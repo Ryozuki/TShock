@@ -400,6 +400,7 @@ namespace TShockAPI
 
 		[Description("Player can see advanced information about any user account.")]
 		public static readonly string advaccountinfo = "tshock.accountinfo.details";
+
 		/// <summary>
 		/// Lists all commands associated with a given permission
 		/// </summary>

@@ -16,7 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
 using System.IO;
 using System.IO.Streams;
 using Terraria;
@@ -47,7 +46,7 @@ namespace TShockAPI.Net
 		public bool Slope2 { get; set; }
 		public bool Slope3 { get; set; }
 
-	public bool HasColor
+		public bool HasColor
 		{
 			get { return TileColor > 0; }
 		}
@@ -114,7 +113,7 @@ namespace TShockAPI.Net
 
 			if (Wire)
 				bits[4] = true;
-			
+
 			if (IsHalf)
 				bits[5] = true;
 
@@ -126,7 +125,7 @@ namespace TShockAPI.Net
 				bits[7] = true;
 			}
 
-			stream.WriteInt8((byte) bits);
+			stream.WriteInt8((byte)bits);
 
 			bits = new BitsByte();
 
@@ -150,7 +149,6 @@ namespace TShockAPI.Net
 
 			if (Slope3)
 				bits[6] = true;
-
 
 			stream.WriteInt8((byte)bits);
 
@@ -186,7 +184,7 @@ namespace TShockAPI.Net
 
 		public void Unpack(Stream stream)
 		{
-			var flags = (BitsByte) stream.ReadInt8();
+			var flags = (BitsByte)stream.ReadInt8();
 			var flags2 = (BitsByte)stream.ReadInt8();
 
 			Wire2 = flags2[0];
@@ -232,7 +230,7 @@ namespace TShockAPI.Net
 
 			if (flags[5])
 				IsHalf = true;
-			
+
 			if (flags[6])
 				IsActuator = true;
 

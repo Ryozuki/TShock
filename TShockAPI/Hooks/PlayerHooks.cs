@@ -282,6 +282,7 @@ namespace TShockAPI.Hooks
 		/// </summary>
 		/// <param name="e">The EventArgs for this event.</param>
 		public delegate void PlayerPostLoginD(PlayerPostLoginEventArgs e);
+
 		/// <summary>
 		/// Fired by players after they've successfully logged in to a user account.
 		/// </summary>
@@ -292,6 +293,7 @@ namespace TShockAPI.Hooks
 		/// </summary>
 		/// <param name="e">The EventArgs for this event.</param>
 		public delegate void PlayerPreLoginD(PlayerPreLoginEventArgs e);
+
 		/// <summary>
 		/// Fired by players when sending login credentials to the server.
 		/// </summary>
@@ -302,6 +304,7 @@ namespace TShockAPI.Hooks
 		/// </summary>
 		/// <param name="e">The EventArgs for this event.</param>
 		public delegate void PlayerLogoutD(PlayerLogoutEventArgs e);
+
 		/// <summary>
 		/// Fired by players upon logging out from a user account.
 		/// </summary>
@@ -312,6 +315,7 @@ namespace TShockAPI.Hooks
 		/// </summary>
 		/// <param name="e">The EventArgs for this event.</param>
 		public delegate void PlayerCommandD(PlayerCommandEventArgs e);
+
 		/// <summary>
 		/// Fired by players when using a command.
 		/// </summary>
@@ -322,6 +326,7 @@ namespace TShockAPI.Hooks
 		/// </summary>
 		/// <param name="e">The EventArgs for this event.</param>
 		public delegate void PlayerChatD(PlayerChatEventArgs e);
+
 		/// <summary>
 		/// Fired by players when they send a chat message packet to the server
 		/// and before it is transmitted to the rest of the players.
@@ -333,6 +338,7 @@ namespace TShockAPI.Hooks
 		/// </summary>
 		/// <param name="e">The EventArgs for this event.</param>
 		public delegate void PlayerPermissionD(PlayerPermissionEventArgs e);
+
 		/// <summary>
 		/// Fired by players every time a permission check involving them occurs.
 		/// </summary>
@@ -343,6 +349,7 @@ namespace TShockAPI.Hooks
 		/// </summary>
 		/// <param name="e">The EventArgs for this event.</param>
 		public delegate void PlayerItembanPermissionD(PlayerItembanPermissionEventArgs e);
+
 		/// <summary>
 		/// Fired by players every time a permission check on banned items involving them occurs.
 		/// </summary>
@@ -353,6 +360,7 @@ namespace TShockAPI.Hooks
 		/// </summary>
 		/// <param name="e">The EventArgs for this event.</param>
 		public delegate void PlayerProjbanPermissionD(PlayerProjbanPermissionEventArgs e);
+
 		/// <summary>
 		/// Fired by players every time a permission check on banned projectiles involving them occurs.
 		/// </summary>
@@ -363,11 +371,11 @@ namespace TShockAPI.Hooks
 		/// </summary>
 		/// <param name="e">The EventArgs for this event.</param>
 		public delegate void PlayerTilebanPermissionD(PlayerTilebanPermissionEventArgs e);
+
 		/// <summary>
 		/// Fired by players every time a permission check on banned tiles involving them occurs.
 		/// </summary>
 		public static event PlayerTilebanPermissionD PlayerTilebanPermission;
-
 
 		/// <summary>
 		/// Fires the <see cref="PlayerPostLogin"/> event.
@@ -377,7 +385,7 @@ namespace TShockAPI.Hooks
 		{
 			if (PlayerPostLogin == null)
 			{
-					return;
+				return;
 			}
 
 			PlayerPostLoginEventArgs args = new PlayerPostLoginEventArgs(ply);
@@ -425,7 +433,7 @@ namespace TShockAPI.Hooks
 			if (PlayerPreLogin == null)
 				return false;
 
-			var args = new PlayerPreLoginEventArgs {Player = ply, LoginName = name, Password = pass};
+			var args = new PlayerPreLoginEventArgs { Player = ply, LoginName = name, Password = pass };
 			PlayerPreLogin(args);
 			return args.Handled;
 		}
@@ -454,7 +462,7 @@ namespace TShockAPI.Hooks
 			if (PlayerChat == null)
 				return;
 
-			var args = new PlayerChatEventArgs {Player = ply, RawText = rawtext, TShockFormattedText = tshockText};
+			var args = new PlayerChatEventArgs { Player = ply, RawText = rawtext, TShockFormattedText = tshockText };
 			PlayerChat(args);
 			tshockText = args.TShockFormattedText;
 		}
@@ -522,7 +530,6 @@ namespace TShockAPI.Hooks
 
 			return args.Result;
 		}
-
 	}
 
 	/// <summary>
@@ -532,10 +539,11 @@ namespace TShockAPI.Hooks
 	{
 		/// <summary>Hook doesn't return a result on the permission check.</summary>
 		Unhandled,
+
 		/// <summary>Permission is explicitly denied by a hook.</summary>
 		Denied,
+
 		/// <summary>Permission is explicitly granted by a hook.</summary>
 		Granted
 	}
-
 }

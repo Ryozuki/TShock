@@ -16,13 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading;
-using Newtonsoft.Json;
-using Microsoft.Xna.Framework;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using TShockAPI.Extensions;
 
@@ -129,13 +129,13 @@ namespace TShockAPI
 			{
 				return update;
 			}
-			
+
 			return null;
 		}
 
 		private void NotifyAdministrators(Dictionary<string, string> update)
 		{
-			var changes = update["changes"].Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+			var changes = update["changes"].Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 			NotifyAdministrator(TSPlayer.Server, changes);
 			foreach (TSPlayer player in TShock.Players)
 			{

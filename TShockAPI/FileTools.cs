@@ -27,6 +27,7 @@ namespace TShockAPI
 	{
 		private const string MotdFormat =
 			"This server is running TShock for Terraria.\n Type /help for a list of commands.\n%255,000,000%Current map: %map%\nCurrent players: %players%";
+
 		/// <summary>
 		/// Path to the file containing the rules.
 		/// </summary>
@@ -101,7 +102,7 @@ namespace TShockAPI
 
 			CreateIfNot(RulesPath, "Respect the admins!\nDon't use TNT!");
 			CreateIfNot(MotdPath, MotdFormat);
-						
+
 			CreateIfNot(WhitelistPath);
 			if (File.Exists(ConfigPath))
 			{

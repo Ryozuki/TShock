@@ -43,7 +43,7 @@ namespace TShockAPI.Localization
 				foreach (var field in typeof(Main).Assembly.GetType("Terraria.ID.PrefixID")
 							.GetFields().Where(f => !f.Name.Equals("Count", StringComparison.Ordinal)))
 				{
-					Prefixs.Add((int) field.GetValue(null), field.Name);
+					Prefixs.Add((int)field.GetValue(null), field.Name);
 				}
 			}
 			finally

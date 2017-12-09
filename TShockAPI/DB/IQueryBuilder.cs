@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MySql.Data.MySqlClient;
 using TShockAPI.Extensions;
 
 namespace TShockAPI.DB
@@ -28,12 +28,19 @@ namespace TShockAPI.DB
 	public interface IQueryBuilder
 	{
 		string CreateTable(SqlTable table);
+
 		string AlterTable(SqlTable from, SqlTable to);
+
 		string DbTypeToString(MySqlDbType type, int? length);
+
 		string UpdateValue(string table, List<SqlValue> values, List<SqlValue> wheres);
+
 		string InsertValues(string table, List<SqlValue> values);
+
 		string ReadColumn(string table, List<SqlValue> wheres);
+
 		string DeleteRow(string table, List<SqlValue> wheres);
+
 		string RenameTable(string from, string to);
 	}
 
@@ -44,13 +51,13 @@ namespace TShockAPI.DB
 			var columns =
 				table.Columns.Select(
 					c =>
-					"'{0}' {1} {2} {3} {4}".SFormat(c.Name, 
-													DbTypeToString(c.Type, c.Length), 
+					"'{0}' {1} {2} {3} {4}".SFormat(c.Name,
+													DbTypeToString(c.Type, c.Length),
 													c.Primary ? "PRIMARY KEY" : "",
-													c.AutoIncrement ? "AUTOINCREMENT" : "", 
+													c.AutoIncrement ? "AUTOINCREMENT" : "",
 													c.NotNull ? "NOT NULL" : ""));
 			var uniques = table.Columns.Where(c => c.Unique).Select(c => c.Name);
-			return "CREATE TABLE {0} ({1} {2})".SFormat(EscapeTableName(table.Name), 
+			return "CREATE TABLE {0} ({1} {2})".SFormat(EscapeTableName(table.Name),
 														string.Join(", ", columns),
 														uniques.Count() > 0 ? ", UNIQUE({0})".SFormat(string.Join(", ", uniques)) : "");
 		}
@@ -72,7 +79,7 @@ namespace TShockAPI.DB
 			{ MySqlDbType.Double, "REAL" },
 			{ MySqlDbType.Int32, "INTEGER" },
 			{ MySqlDbType.Blob, "BLOB" },
-            { MySqlDbType.Int64, "BIGINT"},
+			{ MySqlDbType.Int64, "BIGINT"},
 		};
 
 		public string DbTypeToString(MySqlDbType type, int? length)
@@ -121,7 +128,7 @@ namespace TShockAPI.DB
 			{ MySqlDbType.Float, "FLOAT" },
 			{ MySqlDbType.Double, "DOUBLE" },
 			{ MySqlDbType.Int32, "INT" },
-            { MySqlDbType.Int64, "BIGINT"},
+			{ MySqlDbType.Int64, "BIGINT"},
 		};
 
 		public string DbTypeToString(MySqlDbType type, int? length)
@@ -141,8 +148,11 @@ namespace TShockAPI.DB
 	public abstract class GenericQueryCreator
 	{
 		protected static Random rand = new Random();
+
 		protected abstract string EscapeTableName(string table);
+
 		public abstract string CreateTable(SqlTable table);
+
 		public abstract string RenameTable(string from, string to);
 
 		/// <summary>
@@ -159,7 +169,7 @@ namespace TShockAPI.DB
 				CREATE TABLE "main"."Bans" ("IP" TEXT PRIMARY KEY ,"Name" TEXT)
 				INSERT INTO "main"."Bans" SELECT "IP","Name" FROM "main"."oXHFcGcd04oXHFcGcd04_Bans"
 				DROP TABLE "main"."oXHFcGcd04oXHFcGcd04_Bans"
-			 * 
+			 *
 			 * Twitchy - Oh. I get it!
 			 */
 			var rstr = rand.NextString(20);

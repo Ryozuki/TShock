@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Microsoft.Xna.Framework;
+using MySql.Data.MySqlClient;
 using System;
 using System.Data;
-using MySql.Data.MySqlClient;
 using Terraria;
-using Microsoft.Xna.Framework;
 
 namespace TShockAPI.DB
 {
@@ -33,16 +33,16 @@ namespace TShockAPI.DB
 			database = db;
 
 			var table = new SqlTable("RememberedPos",
-			                         new SqlColumn("Name", MySqlDbType.VarChar, 50) {Primary = true},
-			                         new SqlColumn("IP", MySqlDbType.Text),
-			                         new SqlColumn("X", MySqlDbType.Int32),
-			                         new SqlColumn("Y", MySqlDbType.Int32),
-			                         new SqlColumn("WorldID", MySqlDbType.Text)
+									 new SqlColumn("Name", MySqlDbType.VarChar, 50) { Primary = true },
+									 new SqlColumn("IP", MySqlDbType.Text),
+									 new SqlColumn("X", MySqlDbType.Int32),
+									 new SqlColumn("Y", MySqlDbType.Int32),
+									 new SqlColumn("WorldID", MySqlDbType.Text)
 				);
 			var creator = new SqlTableCreator(db,
-			                                  db.GetSqlType() == SqlType.Sqlite
-			                                  	? (IQueryBuilder) new SqliteQueryCreator()
-			                                  	: new MysqlQueryCreator());
+											  db.GetSqlType() == SqlType.Sqlite
+												  ? (IQueryBuilder)new SqliteQueryCreator()
+												  : new MysqlQueryCreator());
 			creator.EnsureTableStructure(table);
 		}
 
@@ -54,13 +54,13 @@ namespace TShockAPI.DB
 				{
 					if (reader.Read())
 					{
-						int checkX=reader.Get<int>("X");
-						int checkY=reader.Get<int>("Y");
+						int checkX = reader.Get<int>("X");
+						int checkY = reader.Get<int>("Y");
 						//fix leftover inconsistancies
-						if (checkX==0)
-						   checkX++;
-						if (checkY==0)
-						   checkY++;
+						if (checkX == 0)
+							checkX++;
+						if (checkY == 0)
+							checkY++;
 						return new Vector2(checkX, checkY);
 					}
 				}
@@ -72,8 +72,6 @@ namespace TShockAPI.DB
 
 			return new Vector2();
 		}
-
-
 
 		public Vector2 GetLeavePos(string name, string IP)
 		{
@@ -101,8 +99,8 @@ namespace TShockAPI.DB
 			{
 				try
 				{
-					if ((X != 0) && ( Y !=0)) //invalid pos!
-					database.Query("INSERT INTO RememberedPos (Name, IP, X, Y, WorldID) VALUES (@0, @1, @2, @3, @4);", name, IP, X, Y , Main.worldID.ToString());
+					if ((X != 0) && (Y != 0)) //invalid pos!
+						database.Query("INSERT INTO RememberedPos (Name, IP, X, Y, WorldID) VALUES (@0, @1, @2, @3, @4);", name, IP, X, Y, Main.worldID.ToString());
 				}
 				catch (Exception ex)
 				{
@@ -113,8 +111,8 @@ namespace TShockAPI.DB
 			{
 				try
 				{
-					if ((X != 0) && ( Y !=0)) //invalid pos!
-					database.Query("UPDATE RememberedPos SET X = @0, Y = @1, IP = @2, WorldID = @3 WHERE Name = @4;", X, Y, IP, Main.worldID.ToString(), name);
+					if ((X != 0) && (Y != 0)) //invalid pos!
+						database.Query("UPDATE RememberedPos SET X = @0, Y = @1, IP = @2, WorldID = @3 WHERE Name = @4;", X, Y, IP, Main.worldID.ToString(), name);
 				}
 				catch (Exception ex)
 				{

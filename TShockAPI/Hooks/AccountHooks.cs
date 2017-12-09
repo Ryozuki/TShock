@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using TShockAPI.DB;
+
 namespace TShockAPI.Hooks
 {
 	public class AccountDeleteEventArgs
@@ -42,6 +43,7 @@ namespace TShockAPI.Hooks
 	public class AccountHooks
 	{
 		public delegate void AccountCreateD(AccountCreateEventArgs e);
+
 		public static event AccountCreateD AccountCreate;
 
 		public static void OnAccountCreate(UserAccount u)
@@ -53,6 +55,7 @@ namespace TShockAPI.Hooks
 		}
 
 		public delegate void AccountDeleteD(AccountDeleteEventArgs e);
+
 		public static event AccountDeleteD AccountDelete;
 
 		public static void OnAccountDelete(UserAccount u)

@@ -16,17 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using HttpServer;
+using HttpServer.Headers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Reflection;
-using HttpServer;
-using HttpServer.Headers;
-using Newtonsoft.Json;
 using TShockAPI;
 using HttpListener = HttpServer.HttpListener;
 
@@ -48,18 +48,22 @@ namespace Rests
 		/// Verbs sent in the request
 		/// </summary>
 		public RestVerbs Verbs { get; private set; }
+
 		/// <summary>
 		/// Parameters sent in the request
 		/// </summary>
 		public IParameterCollection Parameters { get; private set; }
+
 		/// <summary>
 		/// The HTTP request
 		/// </summary>
 		public IRequest Request { get; private set; }
+
 		/// <summary>
 		/// Token data used by the request
 		/// </summary>
 		public SecureRest.TokenData TokenData { get; private set; }
+
 		/// <summary>
 		/// <see cref="IHttpContext"/> used by the request
 		/// </summary>
@@ -106,22 +110,27 @@ namespace Rests
 	public class Rest : IDisposable
 	{
 		private readonly List<RestCommand> commands = new List<RestCommand>();
+
 		/// <summary>
 		/// Contains redirect URIs. The key is the base URI. The first item of the tuple is the redirect URI.
 		/// The second item of the tuple is an optional "upgrade" URI which will be added to the REST response.
 		/// </summary>
 		private Dictionary<string, Tuple<string, string>> redirects = new Dictionary<string, Tuple<string, string>>();
+
 		private HttpListener listener;
 		private StringHeader serverHeader;
 		private Timer tokenBucketTimer;
+
 		/// <summary>
 		/// Contains tokens used to manage REST authentication
 		/// </summary>
 		public Dictionary<string, int> tokenBucket = new Dictionary<string, int>();
+
 		/// <summary>
 		/// <see cref="IPAddress"/> the REST service is listening on
 		/// </summary>
 		public IPAddress Ip { get; set; }
+
 		/// <summary>
 		/// Port the REST service is listening on
 		/// </summary>
@@ -154,7 +163,6 @@ namespace Rests
 				{
 					DegradeBucket();
 				}, null, TimeSpan.Zero, TimeSpan.FromMinutes(Math.Max(TShock.Config.RESTRequestBucketDecreaseIntervalMinutes, 1)));
-
 			}
 			catch (Exception ex)
 			{
@@ -236,14 +244,14 @@ namespace Rests
 		private void DegradeBucket()
 		{
 			var _bucket = new List<string>(tokenBucket.Keys); // Duplicate the keys so we can modify tokenBucket whilst iterating
-			foreach(string key in _bucket)
+			foreach (string key in _bucket)
 			{
 				int tokens = tokenBucket[key];
-				if(tokens > 0)
+				if (tokens > 0)
 				{
 					tokenBucket[key] -= 1;
 				}
-				if(tokens <= 0)
+				if (tokens <= 0)
 				{
 					tokenBucket.Remove(key);
 				}
@@ -251,6 +259,7 @@ namespace Rests
 		}
 
 		#region Event
+
 		[Obsolete("This class will be removed in the next release")]
 		public class RestRequestEventArgs : HandledEventArgs
 		{
@@ -272,7 +281,8 @@ namespace Rests
 			RestRequestEvent.Invoke(null, args);
 			return args.Handled;
 		}
-		#endregion
+
+		#endregion Event
 
 		/// <summary>
 		/// Called when the <see cref="HttpListener"/> receives a request
@@ -401,7 +411,8 @@ namespace Rests
 		/// <returns></returns>
 		protected virtual string BuildRequestUri(
 			RestCommand cmd, RestVerbs verbs, IParameterCollection parms, bool includeToken = true
-		) {
+		)
+		{
 			StringBuilder requestBuilder = new StringBuilder(cmd.UriTemplate);
 			char separator = '?';
 			foreach (IParameter paramImpl in parms)
@@ -416,7 +427,7 @@ namespace Rests
 				requestBuilder.Append(param.Value);
 				separator = '&';
 			}
-			
+
 			return requestBuilder.ToString();
 		}
 
@@ -455,6 +466,6 @@ namespace Rests
 			Dispose(false);
 		}
 
-		#endregion
+		#endregion Dispose
 	}
 }

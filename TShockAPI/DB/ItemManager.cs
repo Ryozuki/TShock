@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using MySql.Data.MySqlClient;
 using TShockAPI.Hooks;
 
 namespace TShockAPI.DB
@@ -35,13 +35,13 @@ namespace TShockAPI.DB
 			database = db;
 
 			var table = new SqlTable("ItemBans",
-			                         new SqlColumn("ItemName", MySqlDbType.VarChar, 50) {Primary = true},
-			                         new SqlColumn("AllowedGroups", MySqlDbType.Text)
+									 new SqlColumn("ItemName", MySqlDbType.VarChar, 50) { Primary = true },
+									 new SqlColumn("AllowedGroups", MySqlDbType.Text)
 				);
 			var creator = new SqlTableCreator(db,
-			                                  db.GetSqlType() == SqlType.Sqlite
-			                                  	? (IQueryBuilder) new SqliteQueryCreator()
-			                                  	: new MysqlQueryCreator());
+											  db.GetSqlType() == SqlType.Sqlite
+												  ? (IQueryBuilder)new SqliteQueryCreator()
+												  : new MysqlQueryCreator());
 			creator.EnsureTableStructure(table);
 			UpdateItemBans();
 		}
@@ -66,7 +66,7 @@ namespace TShockAPI.DB
 			try
 			{
 				database.Query("INSERT INTO ItemBans (ItemName, AllowedGroups) VALUES (@0, @1);",
-				               itemname, "");
+							   itemname, "");
 				if (!ItemIsBanned(itemname, null))
 					ItemBans.Add(new ItemBan(itemname));
 			}
@@ -103,7 +103,7 @@ namespace TShockAPI.DB
 		public bool ItemIsBanned(string name, TSPlayer ply)
 		{
 			ItemBan b = GetItemBanByName(name);
-			return b != null &&!b.HasPermissionToUseItem(ply);
+			return b != null && !b.HasPermissionToUseItem(ply);
 		}
 
 		public bool AllowGroup(string item, string name)
@@ -121,8 +121,8 @@ namespace TShockAPI.DB
 					b.SetAllowedGroups(groupsNew);
 
 					int q = database.Query("UPDATE ItemBans SET AllowedGroups=@0 WHERE ItemName=@1", groupsNew,
-					                       item);
-					
+										   item);
+
 					return q > 0;
 				}
 				catch (Exception ex)
@@ -140,12 +140,12 @@ namespace TShockAPI.DB
 			if (b != null)
 			{
 				try
-				{				
+				{
 					b.RemoveGroup(group);
 					string groups = string.Join(",", b.AllowedGroups);
 					int q = database.Query("UPDATE ItemBans SET AllowedGroups=@0 WHERE ItemName=@1", groups,
-					                       item);
-					
+										   item);
+
 					if (q > 0)
 						return true;
 				}
@@ -244,7 +244,7 @@ namespace TShockAPI.DB
 		{
 			return AllowedGroups.Remove(groupName);
 		}
-		
+
 		public override string ToString()
 		{
 			return Name + (AllowedGroups.Count > 0 ? " (" + String.Join(",", AllowedGroups) + ")" : "");

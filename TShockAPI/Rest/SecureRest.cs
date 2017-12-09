@@ -16,16 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using HttpServer;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using HttpServer;
+using System.Security.Cryptography;
+using Terraria;
 using TShockAPI;
 using TShockAPI.DB;
-using Microsoft.Xna.Framework;
-using Terraria;
-using System.Security.Cryptography;
 
 namespace Rests
 {

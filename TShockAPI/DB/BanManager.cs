@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using MySql.Data.MySqlClient;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Data;
-using MySql.Data.MySqlClient;
+using System.Linq;
 
 namespace TShockAPI.DB
 {
@@ -322,14 +322,17 @@ namespace TShockAPI.DB
 		/// Bans will be sorted on expiration date, from soonest to latest
 		/// </summary>
 		ExpirationSoonestToLatest,
+
 		/// <summary>
 		/// Bans will be sorted on expiration date, from latest to soonest
 		/// </summary>
 		ExpirationLatestToSoonest,
+
 		/// <summary>
 		/// Bans will be sorted by the date they were added, from newest to oldest
 		/// </summary>
 		AddedNewestToOldest,
+
 		/// <summary>
 		/// Bans will be sorted by the date they were added, from oldest to newest
 		/// </summary>

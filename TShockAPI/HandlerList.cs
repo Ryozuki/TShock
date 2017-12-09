@@ -26,6 +26,7 @@ namespace TShockAPI
 	public class HandlerList : HandlerList<EventArgs>
 	{
 	}
+
 	public class HandlerList<T> where T : EventArgs
 	{
 		public class HandlerItem
@@ -37,6 +38,7 @@ namespace TShockAPI
 
 		protected object HandlerLock = new object();
 		protected List<HandlerItem> Handlers { get; set; }
+
 		public HandlerList()
 		{
 			Handlers = new List<HandlerItem>();
@@ -93,6 +95,7 @@ namespace TShockAPI
 		{
 			return new HandlerItem { Handler = handler, Priority = priority, GetHandled = gethandled };
 		}
+
 		public static HandlerList<T> operator +(HandlerList<T> hand, HandlerItem obj)
 		{
 			if (hand == null)
@@ -101,6 +104,7 @@ namespace TShockAPI
 			hand.Register(obj);
 			return hand;
 		}
+
 		public static HandlerList<T> operator +(HandlerList<T> hand, EventHandler<T> handler)
 		{
 			if (hand == null)
@@ -109,10 +113,12 @@ namespace TShockAPI
 			hand.Register(Create(handler));
 			return hand;
 		}
+
 		public static HandlerList<T> operator -(HandlerList<T> hand, HandlerItem obj)
 		{
 			return hand - obj.Handler;
 		}
+
 		public static HandlerList<T> operator -(HandlerList<T> hand, EventHandler<T> handler)
 		{
 			if (hand == null)

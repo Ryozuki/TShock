@@ -16,15 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Data;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MySql.Data.MySqlClient;
-using System.Text.RegularExpressions;
 using BCrypt.Net;
+using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TShockAPI.DB
 {
@@ -42,8 +42,8 @@ namespace TShockAPI.DB
 			_database = db;
 
 			var table = new SqlTable("Users",
-				new SqlColumn("ID", MySqlDbType.Int32) {Primary = true, AutoIncrement = true},
-				new SqlColumn("Username", MySqlDbType.VarChar, 32) {Unique = true},
+				new SqlColumn("ID", MySqlDbType.Int32) { Primary = true, AutoIncrement = true },
+				new SqlColumn("Username", MySqlDbType.VarChar, 32) { Unique = true },
 				new SqlColumn("Password", MySqlDbType.VarChar, 128),
 				new SqlColumn("UUID", MySqlDbType.VarChar, 128),
 				new SqlColumn("Usergroup", MySqlDbType.Text),
@@ -53,7 +53,7 @@ namespace TShockAPI.DB
 				);
 			var creator = new SqlTableCreator(db,
 				db.GetSqlType() == SqlType.Sqlite
-				? (IQueryBuilder) new SqliteQueryCreator()
+				? (IQueryBuilder)new SqliteQueryCreator()
 				: new MysqlQueryCreator());
 			creator.EnsureTableStructure(table);
 		}
@@ -164,7 +164,7 @@ namespace TShockAPI.DB
 
 			if (_database.Query("UPDATE Users SET UserGroup = @0 WHERE Username = @1;", group, account.Name) == 0)
 				throw new UserAccountNotExistException(account.Name);
-			
+
 			try
 			{
 				// Update player group reference for any logged in player
@@ -223,7 +223,7 @@ namespace TShockAPI.DB
 		{
 			try
 			{
-				return GetUserAccount(new UserAccount {Name = name});
+				return GetUserAccount(new UserAccount { Name = name });
 			}
 			catch (UserAccountManagerException)
 			{
@@ -238,7 +238,7 @@ namespace TShockAPI.DB
 		{
 			try
 			{
-				return GetUserAccount(new UserAccount {ID = id});
+				return GetUserAccount(new UserAccount { ID = id });
 			}
 			catch (UserAccountManagerException)
 			{
@@ -434,19 +434,20 @@ namespace TShockAPI.DB
 		{
 			try
 			{
-				if (BCrypt.Net.BCrypt.Verify(password, Password)) 
+				if (BCrypt.Net.BCrypt.Verify(password, Password))
 				{
 					// If necessary, perform an upgrade to the highest work factor.
 					UpgradePasswordWorkFactor(password);
 					return true;
 				}
-			} 
+			}
 			catch (SaltParseException)
 			{
 				if (String.Equals(HashPassword(password), Password, StringComparison.InvariantCultureIgnoreCase))
 				{
 					// Return true to keep blank passwords working but don't convert them to bcrypt.
-					if (Password == "non-existant password") {
+					if (Password == "non-existant password")
+					{
 						return true;
 					}
 					// The password is not stored using BCrypt; upgrade it to BCrypt immediately
@@ -636,7 +637,7 @@ namespace TShockAPI.DB
 			return !Equals(left, right);
 		}
 
-		#endregion
+		#endregion IEquatable
 
 		/// <summary>
 		/// Converts the UserAccount to it's string representation

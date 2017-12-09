@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
 using System.IO.Streams;
-using System.Text;
 
 namespace TShockAPI.Net
 {

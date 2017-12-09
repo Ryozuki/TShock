@@ -21,10 +21,9 @@ using OTAPI.Tile;
 using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.Utilities;
-using TShockAPI;
-using TShockAPI.DB;
 using Terraria.Localization;
+using Terraria.Utilities;
+using TShockAPI.DB;
 
 namespace TShockAPI
 {

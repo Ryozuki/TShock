@@ -16,6 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using MaxMind;
+using Microsoft.Xna.Framework;
+using Mono.Data.Sqlite;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using Rests;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,23 +33,17 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using MaxMind;
-using Mono.Data.Sqlite;
-using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
-using Rests;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.Utilities;
 using TerrariaApi.Server;
+using TShockAPI.CLI;
 using TShockAPI.DB;
 using TShockAPI.Hooks;
-using TShockAPI.ServerSideCharacters;
-using Terraria.Utilities;
-using Microsoft.Xna.Framework;
-using TShockAPI.Sockets;
-using TShockAPI.CLI;
 using TShockAPI.Localization;
+using TShockAPI.ServerSideCharacters;
+using TShockAPI.Sockets;
 
 namespace TShockAPI
 {
@@ -56,20 +56,26 @@ namespace TShockAPI
 	{
 		/// <summary>VersionNum - The version number the TerrariaAPI will return back to the API. We just use the Assembly info.</summary>
 		public static readonly Version VersionNum = Assembly.GetExecutingAssembly().GetName().Version;
+
 		/// <summary>VersionCodename - The version codename is displayed when the server starts. Inspired by software codenames conventions.</summary>
 		public static readonly string VersionCodename = "Mintaka";
 
 		/// <summary>SavePath - This is the path TShock saves its data in. This path is relative to the TerrariaServer.exe (not in ServerPlugins).</summary>
 		public static string SavePath = "tshock";
+
 		/// <summary>LogFormatDefault - This is the default log file naming format. Actually, this is the only log format, because it never gets set again.</summary>
 		private const string LogFormatDefault = "yyyy-MM-dd_HH-mm-ss";
+
 		//TODO: Set the log path in the config file.
 		/// <summary>LogFormat - This is the log format, which is never set again.</summary>
 		private static string LogFormat = LogFormatDefault;
+
 		/// <summary>LogPathDefault - The default log path.</summary>
 		private const string LogPathDefault = "tshock";
+
 		/// <summary>This is the log path, which is initially set to the default log path, and then to the config file log path later.</summary>
 		private static string LogPath = LogPathDefault;
+
 		/// <summary>LogClear - Determines whether or not the log file should be cleared on initialization.</summary>
 		private static bool LogClear;
 
@@ -83,56 +89,81 @@ namespace TShockAPI
 
 		/// <summary>Players - Contains all TSPlayer objects for accessing TSPlayers currently on the server</summary>
 		public static TSPlayer[] Players = new TSPlayer[Main.maxPlayers];
+
 		/// <summary>Bans - Static reference to the ban manager for accessing bans & related functions.</summary>
 		public static BanManager Bans;
+
 		/// <summary>Warps - Static reference to the warp manager for accessing the warp system.</summary>
 		public static WarpManager Warps;
+
 		/// <summary>Regions - Static reference to the region manager for accessing the region system.</summary>
 		public static RegionManager Regions;
+
 		/// <summary>Backups - Static reference to the backup manager for accessing the backup system.</summary>
 		public static BackupManager Backups;
+
 		/// <summary>Groups - Static reference to the group manager for accessing the group system.</summary>
 		public static GroupManager Groups;
+
 		/// <summary>Users - Static reference to the user manager for accessing the user database system.</summary>
 		public static UserAccountManager UserAccounts;
+
 		/// <summary>Itembans - Static reference to the item ban system.</summary>
 		public static ItemManager Itembans;
+
 		/// <summary>ProjectileBans - Static reference to the projectile ban system.</summary>
 		public static ProjectileManagager ProjectileBans;
+
 		/// <summary>TileBans - Static reference to the tile ban system.</summary>
 		public static TileManager TileBans;
+
 		/// <summary>RememberedPos - Static reference to the remembered position manager.</summary>
 		public static RememberedPosManager RememberedPos;
+
 		/// <summary>CharacterDB - Static reference to the SSC character manager.</summary>
 		public static CharacterManager CharacterDB;
+
 		/// <summary>Config - Static reference to the config system, for accessing values set in users' config files.</summary>
 		public static ConfigFile Config { get; set; }
+
 		/// <summary>ServerSideCharacterConfig - Static reference to the server side character config, for accessing values set by users to modify SSC.</summary>
 		public static ServerSideConfig ServerSideCharacterConfig;
+
 		/// <summary>DB - Static reference to the database.</summary>
 		public static IDbConnection DB;
+
 		/// <summary>OverridePort - Determines if TShock should override the server port.</summary>
 		public static bool OverridePort;
+
 		/// <summary>Geo - Static reference to the GeoIP system which determines the location of an IP address.</summary>
 		public static GeoIPCountry Geo;
+
 		/// <summary>RestApi - Static reference to the Rest API authentication manager.</summary>
 		public static SecureRest RestApi;
+
 		/// <summary>RestManager - Static reference to the Rest API manager.</summary>
 		public static RestManager RestManager;
+
 		/// <summary>Utils - Static reference to the utilities class, which contains a variety of utility functions.</summary>
 		public static Utils Utils = Utils.Instance;
+
 		/// <summary>StatTracker - Static reference to the stat tracker, which sends some server metrics every 5 minutes.</summary>
 		public static StatTracker StatTracker = new StatTracker();
+
 		/// <summary>UpdateManager - Static reference to the update checker, which checks for updates and notifies server admins of updates.</summary>
 		public static UpdateManager UpdateManager;
+
 		/// <summary>Log - Static reference to the log system, which outputs to either SQL or a text file, depending on user config.</summary>
 		public static ILog Log;
+
 		/// <summary>instance - Static reference to the TerrariaPlugin instance.</summary>
 		public static TerrariaPlugin instance;
+
 		/// <summary>
 		/// Static reference to a <see cref="CommandLineParser"/> used for simple command-line parsing
 		/// </summary>
 		public static CommandLineParser CliParser { get; } = new CommandLineParser();
+
 		/// <summary>
 		/// Used for implementing REST Tokens prior to the REST system starting up.
 		/// </summary>
@@ -486,7 +517,7 @@ namespace TShockAPI
 				if (potentialBan.Expiration == "")
 				{
 					Utils.ForceKick(args.Player, String.Format("Permanently banned by {0} for {1}", potentialBan.BanningUser
-						,potentialBan.Reason), false, false);
+						, potentialBan.Reason), false, false);
 				}
 				else
 				{
@@ -823,7 +854,7 @@ namespace TShockAPI
 						Console.WriteLine("Startup parameter overrode REST port.");
 					}
 				})
-				.AddFlags(playerSet, (p)=>
+				.AddFlags(playerSet, (p) =>
 					{
 						int slots;
 						if (int.TryParse(p, out slots))
@@ -838,6 +869,7 @@ namespace TShockAPI
 
 		/// <summary>AuthToken - The auth token used by the /auth system to grant temporary superadmin access to new admins.</summary>
 		public static int AuthToken = -1;
+
 		private string _cliPassword = null;
 
 		/// <summary>OnPostInit - Fired when the server loads a map, to perform world specific operations.</summary>
@@ -976,7 +1008,6 @@ namespace TShockAPI
 					// prevent null point exceptions
 					if (player != null && player.IsLoggedIn && !player.IgnoreActionsForClearingTrashCan)
 					{
-
 						CharacterDB.InsertPlayerData(player);
 					}
 				}
@@ -996,6 +1027,7 @@ namespace TShockAPI
 					case "day":
 						TSPlayer.Server.SetTime(true, 27000.0);
 						break;
+
 					case "night":
 						TSPlayer.Server.SetTime(false, 16200.0);
 						break;
@@ -1253,7 +1285,7 @@ namespace TShockAPI
 			if (args.Handled)
 				return;
 
-			if(!OnCreep(args.Grass))
+			if (!OnCreep(args.Grass))
 			{
 				args.Handled = true;
 			}
@@ -1796,7 +1828,6 @@ namespace TShockAPI
 				e.Handled = true;
 		}
 
-
 		/// <summary>StartInvasion - Starts an invasion on the server.</summary>
 		/// <param name="type">type - The invasion type id.</param>
 		//TODO: Why is this in TShock's main class?
@@ -2234,7 +2265,6 @@ namespace TShockAPI
 								Color.Cyan);
 						}
 					}
-
 				}
 			}
 

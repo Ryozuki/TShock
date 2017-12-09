@@ -15,6 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -25,20 +26,23 @@ using TerrariaApi.Server;
 
 namespace TShockAPI
 {
-	class SaveManager : IDisposable
+	internal class SaveManager : IDisposable
 	{
 		// Singleton
 		private static readonly SaveManager instance = new SaveManager();
-		private SaveManager() 
+
+		private SaveManager()
 		{
 			_saveThread = new Thread(SaveWorker);
 			_saveThread.Name = "TShock SaveManager Worker";
 			_saveThread.Start();
 		}
+
 		public static SaveManager Instance { get { return instance; } }
 
 		// Producer Consumer
 		private EventWaitHandle _wh = new AutoResetEvent(false);
+
 		private Object _saveLock = new Object();
 		private Queue<SaveTask> _saveQueue = new Queue<SaveTask>();
 		private Thread _saveThread;
@@ -130,8 +134,8 @@ namespace TShockAPI
 								}
 								else
 									WorldFile.saveWorld(task.resetTime);
-									TShock.Utils.Broadcast("World saved.", Color.Yellow);
-									TShock.Log.Info(string.Format("World saved at ({0})", Main.worldPathName));
+								TShock.Utils.Broadcast("World saved.", Color.Yellow);
+								TShock.Log.Info(string.Format("World saved at ({0})", Main.worldPathName));
 							}
 							catch (Exception e)
 							{
@@ -145,16 +149,17 @@ namespace TShockAPI
 			}
 		}
 
-		class SaveTask
+		private class SaveTask
 		{
 			public bool resetTime { get; set; }
 			public bool direct { get; set; }
+
 			public SaveTask(bool resetTime, bool direct)
 			{
 				this.resetTime = resetTime;
 				this.direct = direct;
 			}
-		
+
 			public override string ToString()
 			{
 				return string.Format("resetTime {0}, direct {1}", resetTime, direct);

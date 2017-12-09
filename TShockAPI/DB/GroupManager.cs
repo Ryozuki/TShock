@@ -16,13 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using MySql.Data.MySqlClient;
 
 namespace TShockAPI.DB
 {
@@ -357,7 +357,7 @@ namespace TShockAPI.DB
 						groups.Remove(oldGroup);
 						groups.Add(newGroup);
 
-						// We need to check if the old group has been referenced as a parent and update those references accordingly 
+						// We need to check if the old group has been referenced as a parent and update those references accordingly
 						using (var command = db.CreateCommand())
 						{
 							command.CommandText = "UPDATE GroupList SET Parent = @0 WHERE Parent = @1";

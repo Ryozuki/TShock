@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using HttpServer;
 using System.Linq;
 using System.Text.RegularExpressions;
-using HttpServer;
 
 namespace Rests
 {
@@ -71,7 +71,7 @@ namespace Rests
 		}
 	}
 
-	public class SecureRestCommand: RestCommand
+	public class SecureRestCommand : RestCommand
 	{
 		public override bool RequiresToken { get { return true; } }
 		public string[] Permissions { get; set; }

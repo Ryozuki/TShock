@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using MySql.Data.MySqlClient;
 using TShockAPI.Hooks;
 
 namespace TShockAPI.DB
@@ -35,12 +35,12 @@ namespace TShockAPI.DB
 			database = db;
 
 			var table = new SqlTable("ProjectileBans",
-				new SqlColumn("ProjectileID", MySqlDbType.Int32) {Primary = true},
+				new SqlColumn("ProjectileID", MySqlDbType.Int32) { Primary = true },
 				new SqlColumn("AllowedGroups", MySqlDbType.Text)
 				);
 			var creator = new SqlTableCreator(db,
 				db.GetSqlType() == SqlType.Sqlite
-					? (IQueryBuilder) new SqliteQueryCreator()
+					? (IQueryBuilder)new SqliteQueryCreator()
 					: new MysqlQueryCreator());
 			creator.EnsureTableStructure(table);
 			UpdateBans();
@@ -54,7 +54,7 @@ namespace TShockAPI.DB
 			{
 				while (reader != null && reader.Read())
 				{
-					ProjectileBan ban = new ProjectileBan((short) reader.Get<Int32>("ProjectileID"));
+					ProjectileBan ban = new ProjectileBan((short)reader.Get<Int32>("ProjectileID"));
 					ban.SetAllowedGroups(reader.Get<string>("AllowedGroups"));
 					ProjectileBans.Add(ban);
 				}
@@ -117,7 +117,7 @@ namespace TShockAPI.DB
 			ProjectileBan b = GetBanById(id);
 			if (b != null)
 			{
-					try
+				try
 				{
 					groupsNew = String.Join(",", b.AllowedGroups);
 					if (groupsNew.Length > 0)

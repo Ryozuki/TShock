@@ -16,13 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using MySql.Data.MySqlClient;
-using Terraria;
 
 namespace TShockAPI.DB
 {
@@ -35,12 +34,12 @@ namespace TShockAPI.DB
 			database = db;
 
 			var table = new SqlTable("tsCharacter",
-			                         new SqlColumn("Account", MySqlDbType.Int32) {Primary = true},
+									 new SqlColumn("Account", MySqlDbType.Int32) { Primary = true },
 									 new SqlColumn("Health", MySqlDbType.Int32),
-			                         new SqlColumn("MaxHealth", MySqlDbType.Int32),
+									 new SqlColumn("MaxHealth", MySqlDbType.Int32),
 									 new SqlColumn("Mana", MySqlDbType.Int32),
-			                         new SqlColumn("MaxMana", MySqlDbType.Int32),
-			                         new SqlColumn("Inventory", MySqlDbType.Text),
+									 new SqlColumn("MaxMana", MySqlDbType.Int32),
+									 new SqlColumn("Inventory", MySqlDbType.Text),
 									 new SqlColumn("extraSlot", MySqlDbType.Int32),
 									 new SqlColumn("spawnX", MySqlDbType.Int32),
 									 new SqlColumn("spawnY", MySqlDbType.Int32),
@@ -58,9 +57,9 @@ namespace TShockAPI.DB
 									 new SqlColumn("questsCompleted", MySqlDbType.Int32)
 				);
 			var creator = new SqlTableCreator(db,
-			                                  db.GetSqlType() == SqlType.Sqlite
-			                                  	? (IQueryBuilder) new SqliteQueryCreator()
-			                                  	: new MysqlQueryCreator());
+											  db.GetSqlType() == SqlType.Sqlite
+												  ? (IQueryBuilder)new SqliteQueryCreator()
+												  : new MysqlQueryCreator());
 			creator.EnsureTableStructure(table);
 		}
 
@@ -175,7 +174,7 @@ namespace TShockAPI.DB
 				{
 					database.Query(
 						"INSERT INTO tsCharacter (Account, Health, MaxHealth, Mana, MaxMana, Inventory, extraSlot, spawnX, spawnY, skinVariant, hair, hairDye, hairColor, pantsColor, shirtColor, underShirtColor, shoeColor, hideVisuals, skinColor, eyeColor, questsCompleted) VALUES (@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16, @17, @18, @19, @20);",
-						player.Account.ID, playerData.health, playerData.maxHealth, playerData.mana, playerData.maxMana, String.Join("~", playerData.inventory), playerData.extraSlot, player.TPlayer.SpawnX, player.TPlayer.SpawnY, player.TPlayer.skinVariant, player.TPlayer.hair, player.TPlayer.hairDye, TShock.Utils.EncodeColor(player.TPlayer.hairColor), TShock.Utils.EncodeColor(player.TPlayer.pantsColor),TShock.Utils.EncodeColor(player.TPlayer.shirtColor), TShock.Utils.EncodeColor(player.TPlayer.underShirtColor), TShock.Utils.EncodeColor(player.TPlayer.shoeColor), TShock.Utils.EncodeBoolArray(player.TPlayer.hideVisual), TShock.Utils.EncodeColor(player.TPlayer.skinColor),TShock.Utils.EncodeColor(player.TPlayer.eyeColor), player.TPlayer.anglerQuestsFinished);
+						player.Account.ID, playerData.health, playerData.maxHealth, playerData.mana, playerData.maxMana, String.Join("~", playerData.inventory), playerData.extraSlot, player.TPlayer.SpawnX, player.TPlayer.SpawnY, player.TPlayer.skinVariant, player.TPlayer.hair, player.TPlayer.hairDye, TShock.Utils.EncodeColor(player.TPlayer.hairColor), TShock.Utils.EncodeColor(player.TPlayer.pantsColor), TShock.Utils.EncodeColor(player.TPlayer.shirtColor), TShock.Utils.EncodeColor(player.TPlayer.underShirtColor), TShock.Utils.EncodeColor(player.TPlayer.shoeColor), TShock.Utils.EncodeBoolArray(player.TPlayer.hideVisual), TShock.Utils.EncodeColor(player.TPlayer.skinColor), TShock.Utils.EncodeColor(player.TPlayer.eyeColor), player.TPlayer.anglerQuestsFinished);
 					return true;
 				}
 				catch (Exception ex)

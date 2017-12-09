@@ -36,7 +36,9 @@ namespace TShockAPI.Hooks
 		}
 
 		public delegate void RegionEnteredD(RegionEnteredEventArgs args);
+
 		public static event RegionEnteredD RegionEntered;
+
 		public static void OnRegionEntered(TSPlayer player, Region region)
 		{
 			if (RegionEntered == null)
@@ -60,7 +62,9 @@ namespace TShockAPI.Hooks
 		}
 
 		public delegate void RegionLeftD(RegionLeftEventArgs args);
+
 		public static event RegionLeftD RegionLeft;
+
 		public static void OnRegionLeft(TSPlayer player, Region region)
 		{
 			if (RegionLeft == null)
@@ -82,7 +86,9 @@ namespace TShockAPI.Hooks
 		}
 
 		public delegate void RegionCreatedD(RegionCreatedEventArgs args);
+
 		public static event RegionCreatedD RegionCreated;
+
 		public static void OnRegionCreated(Region region)
 		{
 			if (RegionCreated == null)
@@ -102,7 +108,9 @@ namespace TShockAPI.Hooks
 		}
 
 		public delegate void RegionDeletedD(RegionDeletedEventArgs args);
+
 		public static event RegionDeletedD RegionDeleted;
+
 		public static void OnRegionDeleted(Region region)
 		{
 			if (RegionDeleted == null)
@@ -110,7 +118,7 @@ namespace TShockAPI.Hooks
 
 			RegionDeleted(new RegionDeletedEventArgs(region));
 		}
-		
+
 		public class RegionRenamedEventArgs
 		{
 			public Region Region { get; private set; }
@@ -126,7 +134,9 @@ namespace TShockAPI.Hooks
 		}
 
 		public delegate void RegionRenamedD(RegionRenamedEventArgs args);
+
 		public static event RegionRenamedD RegionRenamed;
+
 		public static void OnRegionRenamed(Region region, string oldName, string newName)
 		{
 			if (RegionRenamed == null)

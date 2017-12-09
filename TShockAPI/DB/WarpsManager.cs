@@ -16,20 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Microsoft.Xna.Framework;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using MySql.Data.MySqlClient;
 using Terraria;
-using Microsoft.Xna.Framework;
 
 namespace TShockAPI.DB
 {
 	public class WarpManager
 	{
 		private IDbConnection database;
+
 		/// <summary>
 		/// The list of warps.
 		/// </summary>
@@ -41,17 +42,17 @@ namespace TShockAPI.DB
 			database = db;
 
 			var table = new SqlTable("Warps",
-			                         new SqlColumn("Id", MySqlDbType.Int32){Primary = true, AutoIncrement = true},
-									 new SqlColumn("WarpName", MySqlDbType.VarChar, 50) {Unique = true},
-			                         new SqlColumn("X", MySqlDbType.Int32),
-			                         new SqlColumn("Y", MySqlDbType.Int32),
+									 new SqlColumn("Id", MySqlDbType.Int32) { Primary = true, AutoIncrement = true },
+									 new SqlColumn("WarpName", MySqlDbType.VarChar, 50) { Unique = true },
+									 new SqlColumn("X", MySqlDbType.Int32),
+									 new SqlColumn("Y", MySqlDbType.Int32),
 									 new SqlColumn("WorldID", MySqlDbType.VarChar, 50) { Unique = true },
-			                         new SqlColumn("Private", MySqlDbType.Text)
+									 new SqlColumn("Private", MySqlDbType.Text)
 				);
 			var creator = new SqlTableCreator(db,
-			                                  db.GetSqlType() == SqlType.Sqlite
-			                                  	? (IQueryBuilder) new SqliteQueryCreator()
-			                                  	: new MysqlQueryCreator());
+											  db.GetSqlType() == SqlType.Sqlite
+												  ? (IQueryBuilder)new SqliteQueryCreator()
+												  : new MysqlQueryCreator());
 			creator.EnsureTableStructure(table);
 		}
 
@@ -192,10 +193,12 @@ namespace TShockAPI.DB
 		/// Gets or sets the name.
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
 		/// Gets or sets the warp's privacy state.
 		/// </summary>
 		public bool IsPrivate { get; set; }
+
 		/// <summary>
 		/// Gets or sets the position.
 		/// </summary>

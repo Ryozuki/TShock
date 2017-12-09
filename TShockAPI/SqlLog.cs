@@ -16,18 +16,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using MySql.Data.MySqlClient;
 using TShockAPI.DB;
 
 namespace TShockAPI
 {
-	struct LogInfo
+	internal struct LogInfo
 	{
 		public string timestamp;
 		public string message;
@@ -66,7 +66,7 @@ namespace TShockAPI
 			_backupLog = new TextLog(textlogFilepath, clearTextLog);
 
 			var table = new SqlTable("Logs",
-				new SqlColumn("ID", MySqlDbType.Int32) {AutoIncrement = true, Primary = true},
+				new SqlColumn("ID", MySqlDbType.Int32) { AutoIncrement = true, Primary = true },
 				new SqlColumn("TimeStamp", MySqlDbType.Text),
 				new SqlColumn("LogLevel", MySqlDbType.Int32),
 				new SqlColumn("Caller", MySqlDbType.Text),
@@ -75,7 +75,7 @@ namespace TShockAPI
 
 			var creator = new SqlTableCreator(db,
 				db.GetSqlType() == SqlType.Sqlite
-					? (IQueryBuilder) new SqliteQueryCreator()
+					? (IQueryBuilder)new SqliteQueryCreator()
 					: new MysqlQueryCreator());
 			creator.EnsureTableStructure(table);
 		}

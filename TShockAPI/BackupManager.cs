@@ -44,13 +44,14 @@ namespace TShockAPI
 		public void Backup()
 		{
 			lastbackup = DateTime.UtcNow;
-			Thread t = new Thread(() => {
+			Thread t = new Thread(() =>
+			{
 				DoBackup(null);
 				DeleteOld(null);
 			});
 			t.Name = "Backup Thread";
 			t.Start();
-			
+
 			// ThreadPool.QueueUserWorkItem(DoBackup);
 			// ThreadPool.QueueUserWorkItem(DeleteOld);
 		}
@@ -71,7 +72,6 @@ namespace TShockAPI
 				if (TShock.Config.ShowBackupAutosaveMessages)
 				{
 					TSPlayer.All.SendInfoMessage("Server map saving, potential lag spike.");
-					
 				}
 				Console.WriteLine("Backing up world...");
 

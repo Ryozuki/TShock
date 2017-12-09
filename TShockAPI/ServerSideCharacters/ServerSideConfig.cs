@@ -16,9 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-﻿using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
+
 /*
 TShock, a server mod for Terraria
 Copyright (C) 2011-2017 Nyx Studios (fka. The TShock Team)
@@ -40,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System.IO;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
 
 namespace TShockAPI.ServerSideCharacters
 {
@@ -55,13 +55,13 @@ namespace TShockAPI.ServerSideCharacters
 		[Description("Time, in milliseconds, to disallow discarding items after logging in when ServerSideInventory is ON.")]
 		public int LogonDiscardThreshold = 250;
 
-		[Description("The starting default health for new SSC.")] 
+		[Description("The starting default health for new SSC.")]
 		public int StartingHealth = 100;
 
-		[Description("The starting default mana for new SSC.")] 
+		[Description("The starting default mana for new SSC.")]
 		public int StartingMana = 20;
 
-		[Description("The starting default inventory for new SSC.")] 
+		[Description("The starting default inventory for new SSC.")]
 		public List<NetItem> StartingInventory = new List<NetItem>();
 
 		public static ServerSideConfig Read(string path)

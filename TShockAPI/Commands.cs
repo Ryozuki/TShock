@@ -16,7 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
+using OTAPI.Tile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,18 +26,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Terraria;
+using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.Localization;
-using TShockAPI.DB;
 using TerrariaApi.Server;
+using TShockAPI.DB;
 using TShockAPI.Hooks;
-using Terraria.GameContent.Events;
-using Microsoft.Xna.Framework;
-using OTAPI.Tile;
 using TShockAPI.Localization;
-using System.Text.RegularExpressions;
 
 namespace TShockAPI
 {
@@ -81,32 +81,39 @@ namespace TShockAPI
 		/// Gets or sets whether to allow non-players to use this command.
 		/// </summary>
 		public bool AllowServer { get; set; }
+
 		/// <summary>
 		/// Gets or sets whether to do logging of this command.
 		/// </summary>
 		public bool DoLog { get; set; }
+
 		/// <summary>
 		/// Gets or sets the help text of this command.
 		/// </summary>
 		public string HelpText { get; set; }
+
 		/// <summary>
 		/// Gets or sets an extended description of this command.
 		/// </summary>
 		public string[] HelpDesc { get; set; }
+
 		/// <summary>
 		/// Gets the name of the command.
 		/// </summary>
 		public string Name { get { return Names[0]; } }
+
 		/// <summary>
 		/// Gets the names of the command.
 		/// </summary>
 		public List<string> Names { get; protected set; }
+
 		/// <summary>
 		/// Gets the permissions of the command.
 		/// </summary>
 		public List<string> Permissions { get; protected set; }
 
 		private CommandDelegate commandDelegate;
+
 		public CommandDelegate CommandDelegate
 		{
 			get { return commandDelegate; }
@@ -232,6 +239,7 @@ namespace TShockAPI
 			});
 
 			#region Account Commands
+
 			add(new Command(Permissions.canlogin, AttemptLogin, "login")
 			{
 				AllowServer = false,
@@ -260,8 +268,11 @@ namespace TShockAPI
 			{
 				HelpText = "Shows information about a user."
 			});
-			#endregion
+
+			#endregion Account Commands
+
 			#region Admin Commands
+
 			add(new Command(Permissions.ban, Ban, "ban")
 			{
 				HelpText = "Manages player bans."
@@ -330,8 +341,11 @@ namespace TShockAPI
 			{
 				HelpText = "Shows information about a player."
 			});
-			#endregion
+
+			#endregion Admin Commands
+
 			#region Annoy Commands
+
 			add(new Command(Permissions.annoy, Annoy, "annoy")
 			{
 				HelpText = "Annoys a player for an amount of time."
@@ -348,8 +362,11 @@ namespace TShockAPI
 			{
 				HelpText = "Spawns fireworks at a player."
 			});
-			#endregion
+
+			#endregion Annoy Commands
+
 			#region Configuration Commands
+
 			add(new Command(Permissions.maintenance, CheckUpdates, "checkupdates")
 			{
 				HelpText = "Checks for TShock updates."
@@ -382,8 +399,11 @@ namespace TShockAPI
 			{
 				HelpText = "Manages the server whitelist."
 			});
-			#endregion
+
+			#endregion Configuration Commands
+
 			#region Item Commands
+
 			add(new Command(Permissions.give, Give, "give", "g")
 			{
 				HelpText = "Gives another player an item."
@@ -393,8 +413,11 @@ namespace TShockAPI
 				AllowServer = false,
 				HelpText = "Gives yourself an item."
 			});
-			#endregion
+
+			#endregion Item Commands
+
 			#region NPC Commands
+
 			add(new Command(Permissions.butcher, Butcher, "butcher")
 			{
 				HelpText = "Kills hostile NPCs or NPCs of a certain type."
@@ -429,8 +452,11 @@ namespace TShockAPI
 			{
 				HelpText = "Resets the list of users who have completed an angler quest that day."
 			});
-			#endregion
+
+			#endregion NPC Commands
+
 			#region TP Commands
+
 			add(new Command(Permissions.home, Home, "home")
 			{
 				AllowServer = false,
@@ -471,8 +497,11 @@ namespace TShockAPI
 				AllowServer = false,
 				HelpText = "Toggles whether other people can teleport you."
 			});
-			#endregion
+
+			#endregion TP Commands
+
 			#region World Commands
+
 			add(new Command(Permissions.toggleexpert, ToggleExpert, "expert", "expertmode")
 			{
 				HelpText = "Toggles expert mode."
@@ -556,8 +585,11 @@ namespace TShockAPI
 			{
 				HelpText = "Shows information about the current world."
 			});
-			#endregion
+
+			#endregion World Commands
+
 			#region Other Commands
+
 			add(new Command(Permissions.buff, Buff, "buff")
 			{
 				AllowServer = false,
@@ -616,7 +648,8 @@ namespace TShockAPI
 			{
 				HelpText = "Sends a PM to a player."
 			});
-			#endregion
+
+			#endregion Other Commands
 
 			add(new Command(Aliases, "aliases")
 			{
@@ -878,7 +911,6 @@ namespace TShockAPI
 							args.Player.Teleport((int)pos.X * 16, (int)pos.Y * 16);
 						}
 						args.Player.LoginHarassed = false;
-
 					}
 					TShock.UserAccounts.SetUserAccountUUID(account, args.Player.UUID);
 
@@ -1162,7 +1194,7 @@ namespace TShockAPI
 			}
 		}
 
-		#endregion
+		#endregion Account commands
 
 		#region Stupid commands
 
@@ -1183,7 +1215,7 @@ namespace TShockAPI
 			args.Player.SendInfoMessage("World ID: " + Main.worldID);
 		}
 
-		#endregion
+		#endregion Stupid commands
 
 		#region Player Management Commands
 
@@ -1292,7 +1324,9 @@ namespace TShockAPI
 			switch (subcmd)
 			{
 				case "add":
+
 					#region Add Ban
+
 					{
 						if (args.Parameters.Count < 2)
 						{
@@ -1314,7 +1348,7 @@ namespace TShockAPI
 						// Storage variable to determine if the command executor is the server console
 						// If it is, we assume they have full control and let them override permission checks
 						bool callerIsServerConsole = false;
-						
+
 						if (args.Player is TSServerPlayer)
 						{
 							callerIsServerConsole = true;
@@ -1334,7 +1368,9 @@ namespace TShockAPI
 							if (!(args.Parameters[2] == "0"))
 							{
 								parsedOkay = TShock.Utils.TryParseTime(args.Parameters[2], out banLengthInSeconds);
-							} else {
+							}
+							else
+							{
 								parsedOkay = true;
 							}
 
@@ -1399,7 +1435,8 @@ namespace TShockAPI
 							// If the target is a valid IP...
 							string pattern = @"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
 							Regex r = new Regex(pattern, RegexOptions.IgnoreCase);
-							if (r.IsMatch(args.Parameters[1])) {
+							if (r.IsMatch(args.Parameters[1]))
+							{
 								targetGeneralizedName = "IP: " + args.Parameters[1];
 								success = TShock.Bans.AddBan2(args.Parameters[1], "", "", "", banReason,
 									false, args.Player.Account.Name, banLengthInSeconds == 0 ? "" : DateTime.UtcNow.AddSeconds(banLengthInSeconds).ToString("s"));
@@ -1409,7 +1446,9 @@ namespace TShockAPI
 									args.Player.SendErrorMessage("Note: An account named with this IP address also exists.");
 									args.Player.SendErrorMessage("Note: It will also be banned.");
 								}
-							} else {
+							}
+							else
+							{
 								// Apparently there is no way to not IP ban someone
 								// This means that where we would normally just ban a "character name" here
 								// We can't because it requires some IP as a primary key.
@@ -1420,7 +1459,6 @@ namespace TShockAPI
 									return;
 								}
 							}
-
 						}
 
 						// Case: Offline ban
@@ -1433,7 +1471,7 @@ namespace TShockAPI
 							// This needs to be fixed in a future implementation.
 							targetGeneralizedName = offlineUserAccount.Name;
 
-							if (TShock.Groups.GetGroupByName(offlineUserAccount.Group).HasPermission(Permissions.immunetoban) && 
+							if (TShock.Groups.GetGroupByName(offlineUserAccount.Group).HasPermission(Permissions.immunetoban) &&
 								!callerIsServerConsole)
 							{
 								args.Player.SendErrorMessage("Permission denied. Target {0} is immune to ban.", targetGeneralizedName);
@@ -1448,7 +1486,7 @@ namespace TShockAPI
 
 							string lastIP = JsonConvert.DeserializeObject<List<string>>(offlineUserAccount.KnownIps).Last();
 
-							success = 
+							success =
 								TShock.Bans.AddBan2(lastIP,
 									"", offlineUserAccount.UUID, offlineUserAccount.Name, banReason, false, args.Player.Account.Name,
 									banLengthInSeconds == 0 ? "" : DateTime.UtcNow.AddSeconds(banLengthInSeconds).ToString("s"));
@@ -1482,9 +1520,13 @@ namespace TShockAPI
 
 						return;
 					}
-					#endregion
+
+				#endregion Add Ban
+
 				case "del":
+
 					#region Delete ban
+
 					{
 						if (args.Parameters.Count != 2)
 						{
@@ -1504,10 +1546,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("No bans for {0} exist.", plStr);
 					}
-					#endregion
+
+					#endregion Delete ban
+
 					return;
+
 				case "delip":
+
 					#region Delete IP ban
+
 					{
 						if (args.Parameters.Count != 2)
 						{
@@ -1527,10 +1574,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("IP {0} is not banned.", ip);
 					}
-					#endregion
+
+					#endregion Delete IP ban
+
 					return;
+
 				case "help":
+
 					#region Help
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -1553,10 +1605,15 @@ namespace TShockAPI
 							}
 						);
 					}
-					#endregion
+
+					#endregion Help
+
 					return;
+
 				case "list":
+
 					#region List bans
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -1578,10 +1635,15 @@ namespace TShockAPI
 								NothingToDisplayString = "There are currently no bans."
 							});
 					}
-					#endregion
+
+					#endregion List bans
+
 					return;
+
 				case "listip":
+
 					#region List IP bans
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -1603,8 +1665,11 @@ namespace TShockAPI
 								NothingToDisplayString = "There are currently no IP bans."
 							});
 					}
-					#endregion
+
+					#endregion List IP bans
+
 					return;
+
 				default:
 					args.Player.SendErrorMessage("Invalid subcommand! Type {0}ban help for more information.", Specifier);
 					return;
@@ -1830,7 +1895,6 @@ namespace TShockAPI
 
 		private static void SubstituteUser(CommandArgs args)
 		{
-
 			if (args.Player.tempGroup != null)
 			{
 				args.Player.tempGroup = null;
@@ -1882,7 +1946,6 @@ namespace TShockAPI
 
 		private static void Off(CommandArgs args)
 		{
-
 			if (Main.ServerSideCharacter)
 			{
 				foreach (TSPlayer player in TShock.Players)
@@ -2149,7 +2212,6 @@ namespace TShockAPI
 				}
 				else
 					args.Player.SendErrorMessage("Failed to find any users by that name on the list.");
-
 			}
 			else
 			{
@@ -2214,18 +2276,21 @@ namespace TShockAPI
 					}
 					TSPlayer.All.SendSuccessMessage("{0} has spawned all bosses {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "brain":
 				case "brain of cthulhu":
 					npc.SetDefaults(266);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned the Brain of Cthulhu {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "destroyer":
 					npc.SetDefaults(134);
 					TSPlayer.Server.SetTime(false, 0.0);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned the Destroyer {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "duke":
 				case "duke fishron":
 				case "fishron":
@@ -2233,12 +2298,14 @@ namespace TShockAPI
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned Duke Fishron {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "eater":
 				case "eater of worlds":
 					npc.SetDefaults(13);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned the Eater of Worlds {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "eye":
 				case "eye of cthulhu":
 					npc.SetDefaults(4);
@@ -2246,22 +2313,26 @@ namespace TShockAPI
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned the Eye of Cthulhu {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "golem":
 					npc.SetDefaults(245);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned Golem {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "king":
 				case "king slime":
 					npc.SetDefaults(50);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned King Slime {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "plantera":
 					npc.SetDefaults(262);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned Plantera {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "prime":
 				case "skeletron prime":
 					npc.SetDefaults(127);
@@ -2269,18 +2340,21 @@ namespace TShockAPI
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned Skeletron Prime {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "queen":
 				case "queen bee":
 					npc.SetDefaults(222);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned Queen Bee {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "skeletron":
 					npc.SetDefaults(35);
 					TSPlayer.Server.SetTime(false, 0.0);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned Skeletron {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "twins":
 					TSPlayer.Server.SetTime(false, 0.0);
 					npc.SetDefaults(125);
@@ -2289,6 +2363,7 @@ namespace TShockAPI
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned the Twins {1} time(s).", args.Player.Name, amount);
 					return;
+
 				case "wof":
 				case "wall of flesh":
 					if (Main.wof >= 0)
@@ -2304,12 +2379,14 @@ namespace TShockAPI
 					NPC.SpawnWOF(new Vector2(args.Player.X, args.Player.Y));
 					TSPlayer.All.SendSuccessMessage("{0} has spawned the Wall of Flesh.", args.Player.Name);
 					return;
+
 				case "moon":
 				case "moon lord":
 					npc.SetDefaults(398);
 					TSPlayer.Server.SpawnNPC(npc.type, npc.FullName, amount, args.Player.TileX, args.Player.TileY);
 					TSPlayer.All.SendSuccessMessage("{0} has spawned the Moon Lord {1} time(s).", args.Player.Name, amount);
 					return;
+
 				default:
 					args.Player.SendErrorMessage("Invalid boss type!");
 					return;
@@ -2590,13 +2667,13 @@ namespace TShockAPI
 				var englishName = EnglishLanguage.GetNpcNameById(npc.netID);
 
 				if (string.Equals(npc.FullName, npcStr, StringComparison.InvariantCultureIgnoreCase) ||
-				    string.Equals(englishName, npcStr, StringComparison.InvariantCultureIgnoreCase))
+					string.Equals(englishName, npcStr, StringComparison.InvariantCultureIgnoreCase))
 				{
 					matches = new List<NPC> { npc };
 					break;
 				}
 				if (npc.FullName.ToLowerInvariant().StartsWith(npcStr.ToLowerInvariant()) ||
-				    englishName?.StartsWith(npcStr, StringComparison.InvariantCultureIgnoreCase) == true)
+					englishName?.StartsWith(npcStr, StringComparison.InvariantCultureIgnoreCase) == true)
 					matches.Add(npc);
 			}
 
@@ -2695,6 +2772,7 @@ namespace TShockAPI
 			if (args.Parameters[0].Equals("list"))
 			{
 				#region List warps
+
 				int pageNumber;
 				if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
 					return;
@@ -2708,11 +2786,13 @@ namespace TShockAPI
 						FooterFormat = "Type {0}warp list {{0}} for more.".SFormat(Specifier),
 						NothingToDisplayString = "There are currently no warps defined."
 					});
-				#endregion
+
+				#endregion List warps
 			}
 			else if (args.Parameters[0].ToLower() == "add" && hasManageWarpPermission)
 			{
 				#region Add warp
+
 				if (args.Parameters.Count == 2)
 				{
 					string warpName = args.Parameters[1];
@@ -2731,11 +2811,13 @@ namespace TShockAPI
 				}
 				else
 					args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}warp add [name]", Specifier);
-				#endregion
+
+				#endregion Add warp
 			}
 			else if (args.Parameters[0].ToLower() == "del" && hasManageWarpPermission)
 			{
 				#region Del warp
+
 				if (args.Parameters.Count == 2)
 				{
 					string warpName = args.Parameters[1];
@@ -2748,11 +2830,13 @@ namespace TShockAPI
 				}
 				else
 					args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}warp del [name]", Specifier);
-				#endregion
+
+				#endregion Del warp
 			}
 			else if (args.Parameters[0].ToLower() == "hide" && hasManageWarpPermission)
 			{
 				#region Hide warp
+
 				if (args.Parameters.Count == 3)
 				{
 					string warpName = args.Parameters[1];
@@ -2774,11 +2858,13 @@ namespace TShockAPI
 				}
 				else
 					args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}warp hide [name] <true/false>", Specifier);
-				#endregion
+
+				#endregion Hide warp
 			}
 			else if (args.Parameters[0].ToLower() == "send" && args.Player.HasPermission(Permissions.tpothers))
 			{
 				#region Warp send
+
 				if (args.Parameters.Count < 3)
 				{
 					args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}warp send [player] [warpname]", Specifier);
@@ -2812,7 +2898,8 @@ namespace TShockAPI
 				{
 					args.Player.SendErrorMessage("Specified warp not found.");
 				}
-				#endregion
+
+				#endregion Warp send
 			}
 			else
 			{
@@ -2841,7 +2928,9 @@ namespace TShockAPI
 			switch (subCmd)
 			{
 				case "add":
+
 					#region Add group
+
 					{
 						if (args.Parameters.Count < 2)
 						{
@@ -2867,10 +2956,15 @@ namespace TShockAPI
 							args.Player.SendErrorMessage(ex.ToString());
 						}
 					}
-					#endregion
+
+					#endregion Add group
+
 					return;
+
 				case "addperm":
+
 					#region Add permissions
+
 					{
 						if (args.Parameters.Count < 3)
 						{
@@ -2903,10 +2997,15 @@ namespace TShockAPI
 							args.Player.SendErrorMessage(ex.ToString());
 						}
 					}
-					#endregion
+
+					#endregion Add permissions
+
 					return;
+
 				case "help":
+
 					#region Help
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -2935,10 +3034,15 @@ namespace TShockAPI
 							}
 						);
 					}
-					#endregion
+
+					#endregion Help
+
 					return;
+
 				case "parent":
+
 					#region Parent
+
 					{
 						if (args.Parameters.Count < 2)
 						{
@@ -2985,10 +3089,15 @@ namespace TShockAPI
 								args.Player.SendSuccessMessage("Group \"{0}\" has no parent.", group.Name);
 						}
 					}
-					#endregion
+
+					#endregion Parent
+
 					return;
+
 				case "suffix":
+
 					#region Suffix
+
 					{
 						if (args.Parameters.Count < 2)
 						{
@@ -3030,10 +3139,15 @@ namespace TShockAPI
 								args.Player.SendSuccessMessage("Group \"{0}\" has no suffix.", group.Name);
 						}
 					}
-					#endregion
+
+					#endregion Suffix
+
 					return;
+
 				case "prefix":
+
 					#region Prefix
+
 					{
 						if (args.Parameters.Count < 2)
 						{
@@ -3075,10 +3189,15 @@ namespace TShockAPI
 								args.Player.SendSuccessMessage("Group \"{0}\" has no prefix.", group.Name);
 						}
 					}
-					#endregion
+
+					#endregion Prefix
+
 					return;
+
 				case "color":
+
 					#region Color
+
 					{
 						if (args.Parameters.Count < 2 || args.Parameters.Count > 3)
 						{
@@ -3125,10 +3244,15 @@ namespace TShockAPI
 							args.Player.SendSuccessMessage("Color of \"{0}\" is \"{1}\".", group.Name, group.ChatColor);
 						}
 					}
-					#endregion
+
+					#endregion Color
+
 					return;
+
 				case "rename":
+
 					#region Rename group
+
 					{
 						if (args.Parameters.Count != 3)
 						{
@@ -3148,10 +3272,15 @@ namespace TShockAPI
 							args.Player.SendErrorMessage(ex.Message);
 						}
 					}
-					#endregion
+
+					#endregion Rename group
+
 					return;
+
 				case "del":
+
 					#region Delete group
+
 					{
 						if (args.Parameters.Count != 2)
 						{
@@ -3172,10 +3301,15 @@ namespace TShockAPI
 							args.Player.SendErrorMessage(ex.ToString());
 						}
 					}
-					#endregion
+
+					#endregion Delete group
+
 					return;
+
 				case "delperm":
+
 					#region Delete permissions
+
 					{
 						if (args.Parameters.Count < 3)
 						{
@@ -3208,10 +3342,15 @@ namespace TShockAPI
 							args.Player.SendErrorMessage(ex.ToString());
 						}
 					}
-					#endregion
+
+					#endregion Delete permissions
+
 					return;
+
 				case "list":
+
 					#region List groups
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -3225,10 +3364,15 @@ namespace TShockAPI
 								FooterFormat = "Type {0}group list {{0}} for more.".SFormat(Specifier)
 							});
 					}
-					#endregion
+
+					#endregion List groups
+
 					return;
+
 				case "listperm":
+
 					#region List permissions
+
 					{
 						if (args.Parameters.Count == 1)
 						{
@@ -3255,10 +3399,13 @@ namespace TShockAPI
 								NothingToDisplayString = "There are currently no permissions for " + grp.Name + "."
 							});
 					}
-					#endregion
+
+					#endregion List permissions
+
 					return;
 			}
 		}
+
 		#endregion Group Management
 
 		#region Item Management
@@ -3269,7 +3416,9 @@ namespace TShockAPI
 			switch (subCmd)
 			{
 				case "add":
+
 					#region Add item
+
 					{
 						if (args.Parameters.Count != 2)
 						{
@@ -3292,10 +3441,15 @@ namespace TShockAPI
 							args.Player.SendSuccessMessage("Banned " + items[0].Name + ".");
 						}
 					}
-					#endregion
+
+					#endregion Add item
+
 					return;
+
 				case "allow":
+
 					#region Allow group to item
+
 					{
 						if (args.Parameters.Count != 3)
 						{
@@ -3337,10 +3491,15 @@ namespace TShockAPI
 							}
 						}
 					}
-					#endregion
+
+					#endregion Allow group to item
+
 					return;
+
 				case "del":
+
 					#region Delete item
+
 					{
 						if (args.Parameters.Count != 2)
 						{
@@ -3363,10 +3522,15 @@ namespace TShockAPI
 							args.Player.SendSuccessMessage("Unbanned " + items[0].Name + ".");
 						}
 					}
-					#endregion
+
+					#endregion Delete item
+
 					return;
+
 				case "disallow":
+
 					#region Disllow group from item
+
 					{
 						if (args.Parameters.Count != 3)
 						{
@@ -3408,10 +3572,15 @@ namespace TShockAPI
 							}
 						}
 					}
-					#endregion
+
+					#endregion Disllow group from item
+
 					return;
+
 				case "help":
+
 					#region Help
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -3434,10 +3603,15 @@ namespace TShockAPI
 							}
 						);
 					}
-					#endregion
+
+					#endregion Help
+
 					return;
+
 				case "list":
+
 					#region List items
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -3452,10 +3626,13 @@ namespace TShockAPI
 								NothingToDisplayString = "There are currently no banned items."
 							});
 					}
-					#endregion
+
+					#endregion List items
+
 					return;
 			}
 		}
+
 		#endregion Item Management
 
 		#region Projectile Management
@@ -3466,7 +3643,9 @@ namespace TShockAPI
 			switch (subCmd)
 			{
 				case "add":
+
 					#region Add projectile
+
 					{
 						if (args.Parameters.Count != 2)
 						{
@@ -3482,10 +3661,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("Invalid projectile ID!");
 					}
-					#endregion
+
+					#endregion Add projectile
+
 					return;
+
 				case "allow":
+
 					#region Allow group to projectile
+
 					{
 						if (args.Parameters.Count != 3)
 						{
@@ -3519,10 +3703,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("Invalid projectile ID!");
 					}
-					#endregion
+
+					#endregion Allow group to projectile
+
 					return;
+
 				case "del":
+
 					#region Delete projectile
+
 					{
 						if (args.Parameters.Count != 2)
 						{
@@ -3540,10 +3729,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("Invalid projectile ID!");
 					}
-					#endregion
+
+					#endregion Delete projectile
+
 					return;
+
 				case "disallow":
+
 					#region Disallow group from projectile
+
 					{
 						if (args.Parameters.Count != 3)
 						{
@@ -3578,10 +3772,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("Invalid projectile ID!");
 					}
-					#endregion
+
+					#endregion Disallow group from projectile
+
 					return;
+
 				case "help":
+
 					#region Help
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -3604,10 +3803,15 @@ namespace TShockAPI
 							}
 						);
 					}
-					#endregion
+
+					#endregion Help
+
 					return;
+
 				case "list":
+
 					#region List projectiles
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -3622,20 +3826,26 @@ namespace TShockAPI
 								NothingToDisplayString = "There are currently no banned projectiles."
 							});
 					}
-					#endregion
+
+					#endregion List projectiles
+
 					return;
 			}
 		}
+
 		#endregion Projectile Management
 
 		#region Tile Management
+
 		private static void TileBan(CommandArgs args)
 		{
 			string subCmd = args.Parameters.Count == 0 ? "help" : args.Parameters[0].ToLower();
 			switch (subCmd)
 			{
 				case "add":
+
 					#region Add tile
+
 					{
 						if (args.Parameters.Count != 2)
 						{
@@ -3651,10 +3861,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("Invalid tile ID!");
 					}
-					#endregion
+
+					#endregion Add tile
+
 					return;
+
 				case "allow":
+
 					#region Allow group to place tile
+
 					{
 						if (args.Parameters.Count != 3)
 						{
@@ -3688,10 +3903,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("Invalid tile ID!");
 					}
-					#endregion
+
+					#endregion Allow group to place tile
+
 					return;
+
 				case "del":
+
 					#region Delete tile ban
+
 					{
 						if (args.Parameters.Count != 2)
 						{
@@ -3709,10 +3929,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("Invalid tile ID!");
 					}
-					#endregion
+
+					#endregion Delete tile ban
+
 					return;
+
 				case "disallow":
+
 					#region Disallow group from placing tile
+
 					{
 						if (args.Parameters.Count != 3)
 						{
@@ -3747,10 +3972,15 @@ namespace TShockAPI
 						else
 							args.Player.SendErrorMessage("Invalid tile ID!");
 					}
-					#endregion
+
+					#endregion Disallow group from placing tile
+
 					return;
+
 				case "help":
+
 					#region Help
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -3773,10 +4003,15 @@ namespace TShockAPI
 							}
 						);
 					}
-					#endregion
+
+					#endregion Help
+
 					return;
+
 				case "list":
+
 					#region List tile bans
+
 					{
 						int pageNumber;
 						if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
@@ -3791,10 +4026,13 @@ namespace TShockAPI
 								NothingToDisplayString = "There are currently no banned tiles."
 							});
 					}
-					#endregion
+
+					#endregion List tile bans
+
 					return;
 			}
 		}
+
 		#endregion Tile Management
 
 		#region Server Config Commands
@@ -3958,18 +4196,22 @@ namespace TShockAPI
 					TSPlayer.Server.SetTime(true, 0.0);
 					TSPlayer.All.SendInfoMessage("{0} set the time to 4:30.", args.Player.Name);
 					break;
+
 				case "night":
 					TSPlayer.Server.SetTime(false, 0.0);
 					TSPlayer.All.SendInfoMessage("{0} set the time to 19:30.", args.Player.Name);
 					break;
+
 				case "noon":
 					TSPlayer.Server.SetTime(true, 27000.0);
 					TSPlayer.All.SendInfoMessage("{0} set the time to 12:00.", args.Player.Name);
 					break;
+
 				case "midnight":
 					TSPlayer.Server.SetTime(false, 16200.0);
 					TSPlayer.All.SendInfoMessage("{0} set the time to 0:00.", args.Player.Name);
 					break;
+
 				default:
 					string[] array = args.Parameters[0].Split(':');
 					if (array.Length != 2)
@@ -4019,10 +4261,12 @@ namespace TShockAPI
 					Terraria.GameContent.Events.Sandstorm.StartSandstorm();
 					TSPlayer.All.SendInfoMessage("{0} started a sandstorm.", args.Player.Name);
 					break;
+
 				case "stop":
 					Terraria.GameContent.Events.Sandstorm.StopSandstorm();
 					TSPlayer.All.SendInfoMessage("{0} stopped the sandstorm.", args.Player.Name);
 					break;
+
 				default:
 					args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}sandstorm <stop/start>", Specifier);
 					break;
@@ -4059,6 +4303,7 @@ namespace TShockAPI
 						TSPlayer.All.SendInfoMessage("{0} caused it to rain.", args.Player.Name);
 					}
 					break;
+
 				case "stop":
 					if (switchIndex == 1)
 					{
@@ -4073,10 +4318,10 @@ namespace TShockAPI
 						TSPlayer.All.SendInfoMessage("{0} ended the downpour.", args.Player.Name);
 					}
 					break;
+
 				default:
 					args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}rain [slime] <stop/start>", Specifier);
 					break;
-
 			}
 		}
 
@@ -4334,6 +4579,7 @@ namespace TShockAPI
 					else
 						args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}region remove <name> <region>", Specifier);
 					break;
+
 				case "allowg":
 					{
 						if (args.Parameters.Count > 2)
@@ -4404,6 +4650,7 @@ namespace TShockAPI
 					else
 						args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}region removeg <group> <region>", Specifier);
 					break;
+
 				case "list":
 					{
 						int pageNumber;
@@ -4639,8 +4886,8 @@ namespace TShockAPI
 								args.Player.SendErrorMessage("Region \"{0}\" already exists.", newName);
 								break;
 							}
-							
-							if(TShock.Regions.RenameRegion(oldName, newName))
+
+							if (TShock.Regions.RenameRegion(oldName, newName))
 							{
 								args.Player.SendInfoMessage("Region renamed successfully!");
 							}
@@ -5221,6 +5468,7 @@ namespace TShockAPI
 						args.Player.SendSuccessMessage("Deleted {0} items within a radius of {1}.", cleared, radius);
 					}
 					break;
+
 				case "npc":
 				case "npcs":
 					{
@@ -5241,6 +5489,7 @@ namespace TShockAPI
 						args.Player.SendSuccessMessage("Deleted {0} NPCs within a radius of {1}.", cleared, radius);
 					}
 					break;
+
 				case "proj":
 				case "projectile":
 				case "projectiles":
@@ -5262,6 +5511,7 @@ namespace TShockAPI
 						args.Player.SendSuccessMessage("Deleted {0} projectiles within a radius of {1}.", cleared, radius);
 					}
 					break;
+
 				default:
 					args.Player.SendErrorMessage("Invalid clear option!");
 					break;
@@ -5567,7 +5817,6 @@ namespace TShockAPI
 							{
 								args.Player.SendErrorMessage("You cannot spawn banned items.");
 							}
-
 						}
 						else
 						{
@@ -5750,6 +5999,7 @@ namespace TShockAPI
 					WorldGen.GrowTree(x, y);
 					name = "Tree";
 					break;
+
 				case "epictree":
 					for (int i = x - 1; i < x + 2; i++)
 					{
@@ -5763,6 +6013,7 @@ namespace TShockAPI
 					WorldGen.GrowEpicTree(x, y);
 					name = "Epic Tree";
 					break;
+
 				case "mushroom":
 					for (int i = x - 1; i < x + 2; i++)
 					{
@@ -5774,11 +6025,13 @@ namespace TShockAPI
 					WorldGen.GrowShroom(x, y);
 					name = "Mushroom";
 					break;
+
 				case "cactus":
 					Main.tile[x, y].type = 53;
 					WorldGen.GrowCactus(x, y);
 					name = "Cactus";
 					break;
+
 				case "herb":
 					Main.tile[x, y].active(true);
 					Main.tile[x, y].frameX = 36;
@@ -5786,6 +6039,7 @@ namespace TShockAPI
 					WorldGen.GrowAlch(x, y);
 					name = "Herb";
 					break;
+
 				default:
 					args.Player.SendErrorMessage("Unknown plant!");
 					return;
@@ -5844,6 +6098,6 @@ namespace TShockAPI
 			}
 		}
 
-		#endregion Cheat Comamnds
+		#endregion Cheat Commands
 	}
 }

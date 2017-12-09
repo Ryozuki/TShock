@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using HttpServer;
+using Rests;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,11 +26,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using HttpServer;
-using Rests;
 using Terraria;
 using TShockAPI.DB;
-using Newtonsoft.Json;
 
 namespace TShockAPI
 {
@@ -83,14 +82,17 @@ namespace TShockAPI
 		/// The parameter's name
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
 		/// Whether the parameter is required or not
 		/// </summary>
 		public bool Required { get; set; }
+
 		/// <summary>
 		/// The parameter's description
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// The parameter's System Type
 		/// </summary>
@@ -155,7 +157,7 @@ namespace TShockAPI
 		/// <summary>
 		/// Creates a new instance of <see cref="Token"/>
 		/// </summary>
-		public Token() : base("token", true, "The REST authentication token.", typeof(String)){}
+		public Token() : base("token", true, "The REST authentication token.", typeof(String)) { }
 	}
 
 	/// <summary>
@@ -242,7 +244,6 @@ namespace TShockAPI
 			Rest.RegisterRedirect("/groups/destroy", "/v2/groups/destroy");
 			Rest.RegisterRedirect("/groups/create", "/v2/groups/create");
 			Rest.RegisterRedirect("/groups/update", "/v2/groups/update");
-
 
 			Rest.Register(new SecureRestCommand("/v2/server/broadcast", ServerBroadcast));
 			Rest.Register(new SecureRestCommand("/v3/server/reload", ServerReload, RestPermissions.restcfg));
@@ -440,7 +441,7 @@ namespace TShockAPI
 
 			if (GetBool(args.Parameters["rules"], false))
 			{
-				var rules = new Dictionary<string,object>();
+				var rules = new Dictionary<string, object>();
 				rules.Add("AutoSave", TShock.Config.AutoSave);
 				rules.Add("DisableBuild", TShock.Config.DisableBuild);
 				rules.Add("DisableClownBombs", TShock.Config.DisableClownBombs);
@@ -472,7 +473,7 @@ namespace TShockAPI
 			};
 		}
 
-		#endregion
+		#endregion Rest Server Methods
 
 		#region Rest User Methods
 
@@ -512,8 +513,8 @@ namespace TShockAPI
 				return RestMissingParam("user");
 
 			var group = args.Parameters["group"];
-		    if (string.IsNullOrWhiteSpace(group))
-		        group = TShock.Config.DefaultRegistrationGroupName;
+			if (string.IsNullOrWhiteSpace(group))
+				group = TShock.Config.DefaultRegistrationGroupName;
 
 			var password = args.Parameters["password"];
 			if (string.IsNullOrWhiteSpace(password))
@@ -624,7 +625,7 @@ namespace TShockAPI
 			return new RestObject() { { "group", account.Group }, { "id", account.ID.ToString() }, { "name", account.Name } };
 		}
 
-		#endregion
+		#endregion Rest User Methods
 
 		#region Rest Ban Methods
 
@@ -676,14 +677,15 @@ namespace TShockAPI
 						if (!TShock.Bans.RemoveBan(ban.IP, false, false, true))
 							return RestResponse("Failed to delete ban (already deleted?)");
 						break;
+
 					case "name":
 						if (!TShock.Bans.RemoveBan(ban.Name, true, GetBool(args.Parameters["caseinsensitive"], true)))
 							return RestResponse("Failed to delete ban (already deleted?)");
 						break;
+
 					default:
 						return RestError("Invalid Type: '" + args.Parameters["type"] + "'");
 				}
-
 			}
 			catch (Exception e)
 			{
@@ -730,7 +732,7 @@ namespace TShockAPI
 					{
 						{"name", null == ban.Name ? "" : ban.Name},
 						{"ip", null == ban.IP ? "" : ban.IP},
-            					{"banning_user", null == ban.BanningUser ? "" : ban.BanningUser},
+								{"banning_user", null == ban.BanningUser ? "" : ban.BanningUser},
 						{"date", null == ban.BanDateTime ? "" : ban.BanDateTime.Value.ToString()},
 						{"reason", null == ban.Reason ? "" : ban.Reason},
 					}
@@ -740,7 +742,7 @@ namespace TShockAPI
 			return new RestObject() { { "bans", banList } };
 		}
 
-		#endregion
+		#endregion Rest Ban Methods
 
 		#region Rest World Methods
 
@@ -872,7 +874,7 @@ namespace TShockAPI
 			return RestResponse($"Blood Moon has been {(Main.bloodMoon ? "enabled" : "disabled")}");
 		}
 
-		#endregion
+		#endregion Rest World Methods
 
 		#region Rest Player Methods
 
@@ -1046,7 +1048,7 @@ namespace TShockAPI
 			return RestResponse("Player " + player.Name + " was killed");
 		}
 
-		#endregion
+		#endregion Rest Player Methods
 
 		#region Rest Group Methods
 
@@ -1059,7 +1061,7 @@ namespace TShockAPI
 			var groups = new ArrayList();
 			foreach (Group group in TShock.Groups)
 			{
-				groups.Add(new Dictionary<string, object> {{"name", group.Name}, {"parent", group.ParentName}, {"chatcolor", group.ChatColor}});
+				groups.Add(new Dictionary<string, object> { { "name", group.Name }, { "parent", group.ParentName }, { "chatcolor", group.ChatColor } });
 			}
 			return new RestObject() { { "groups", groups } };
 		}
@@ -1164,7 +1166,7 @@ namespace TShockAPI
 			return RestResponse("Group '" + group.Name + "' updated successfully");
 		}
 
-		#endregion
+		#endregion Rest Group Methods
 
 		#region Utility Methods
 
@@ -1220,7 +1222,7 @@ namespace TShockAPI
 						}
 					}
 					sb.AppendLine("Example Usage: {0}?{1}".SFormat(routeattr.Route,
-						string.Join("&", nouns.Select(n => String.Format("{0}={0}", ((Noun) n).Name)))));
+						string.Join("&", nouns.Select(n => String.Format("{0}={0}", ((Noun)n).Name)))));
 					sb.AppendLine();
 				}
 			}
@@ -1230,12 +1232,12 @@ namespace TShockAPI
 
 		private RestObject RestError(string message, string status = "400")
 		{
-			return new RestObject(status) {Error = message};
+			return new RestObject(status) { Error = message };
 		}
 
 		private RestObject RestResponse(string message, string status = "200")
 		{
-			return new RestObject(status) {Response = message};
+			return new RestObject(status) { Response = message };
 		}
 
 		private RestObject RestMissingParam(string var)
@@ -1266,12 +1268,14 @@ namespace TShockAPI
 				return RestMissingParam("player");
 
 			var found = TShock.Utils.FindPlayer(name);
-			switch(found.Count)
+			switch (found.Count)
 			{
 				case 1:
 					return found[0];
+
 				case 0:
 					return RestError("Player " + name + " was not found");
+
 				default:
 					return RestError("Player " + name + " matches " + found.Count + " players");
 			}
@@ -1294,9 +1298,11 @@ namespace TShockAPI
 						type = "name";
 						account = TShock.UserAccounts.GetUserAccountByName(name);
 						break;
+
 					case "id":
 						account = TShock.UserAccounts.GetUserAccountByID(Convert.ToInt32(name));
 						break;
+
 					default:
 						return RestError("Invalid Type: '" + type + "'");
 				}
@@ -1328,9 +1334,11 @@ namespace TShockAPI
 				case "ip":
 					ban = TShock.Bans.GetBanByIp(name);
 					break;
+
 				case "name":
 					ban = TShock.Bans.GetBanByName(name, GetBool(parameters["caseinsensitive"], true));
 					break;
+
 				default:
 					return RestError("Invalid Type: '" + type + "'");
 			}
@@ -1391,6 +1399,6 @@ namespace TShockAPI
 			return RestResponse("Player " + player.Name + " was " + verb);
 		}
 
-		#endregion
+		#endregion Utility Methods
 	}
 }

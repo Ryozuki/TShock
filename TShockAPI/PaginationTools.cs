@@ -32,11 +32,13 @@ namespace TShockAPI
 		public delegate Tuple<string, Color> LineFormatterDelegate(object lineData, int lineIndex, int pageNumber);
 
 		#region [Nested: Settings Class]
+
 		public class Settings
 		{
 			public bool IncludeHeader { get; set; }
 
 			private string headerFormat;
+
 			public string HeaderFormat
 			{
 				get { return this.headerFormat; }
@@ -53,6 +55,7 @@ namespace TShockAPI
 			public bool IncludeFooter { get; set; }
 
 			private string footerFormat;
+
 			public string FooterFormat
 			{
 				get { return this.footerFormat; }
@@ -98,7 +101,6 @@ namespace TShockAPI
 				}
 			}
 
-
 			public Settings()
 			{
 				this.IncludeHeader = true;
@@ -114,7 +116,8 @@ namespace TShockAPI
 				this.pageLimit = 0;
 			}
 		}
-		#endregion
+
+		#endregion [Nested: Settings Class]
 
 		public static void SendPage(
 		  TSPlayer player, int pageNumber, IEnumerable dataToPaginate, int dataToPaginateCount, Settings settings = null)

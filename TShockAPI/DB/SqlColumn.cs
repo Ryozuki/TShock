@@ -24,11 +24,12 @@ namespace TShockAPI.DB
 	{
 		//Required
 		public string Name { get; set; }
-		public MySqlDbType Type { get; set; }
 
+		public MySqlDbType Type { get; set; }
 
 		//Optional
 		public bool Unique { get; set; }
+
 		public bool Primary { get; set; }
 		public bool AutoIncrement { get; set; }
 		public bool NotNull { get; set; }

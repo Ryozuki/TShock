@@ -17,8 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TShockAPI
 {
@@ -66,7 +66,7 @@ namespace TShockAPI
 
 		/// <summary>
 		/// The name of the parent, not particularly sure why this is here.
-		/// We can use group.Parent.Name and not have this second reference. 
+		/// We can use group.Parent.Name and not have this second reference.
 		/// This was added for rest, so a discussion with Shank is necessary.
 		/// </summary>
 		public string ParentName { get { return (null == Parent) ? "" : Parent.Name; } }
@@ -155,10 +155,12 @@ namespace TShockAPI
 		/// The group's chat color red byte.
 		/// </summary>
 		public byte R = 255;
+
 		/// <summary>
 		/// The group's chat color green byte.
 		/// </summary>
 		public byte G = 255;
+
 		/// <summary>
 		/// The group's chat color blue byte.
 		/// </summary>
@@ -211,6 +213,7 @@ namespace TShockAPI
 			}
 			return false;
 		}
+
 		private bool RealHasPermission(string permission, ref bool negated)
 		{
 			negated = false;
@@ -272,7 +275,7 @@ namespace TShockAPI
 		}
 
 		/// <summary>
-		/// Clears the permission list and sets it to the list provided, 
+		/// Clears the permission list and sets it to the list provided,
 		/// will parse "!permssion" and add it to the negated permissions.
 		/// </summary>
 		/// <param name="permission">The new list of permissions to associate with the group.</param>

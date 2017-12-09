@@ -84,7 +84,7 @@ namespace Rests
 		[Description("REST user can run raw TShock commands (the raw command permissions are also checked though).")]
 		public const string restrawcommand = "tshock.rest.command";
 
-		[Description("REST user can view the ips of players.")] 
+		[Description("REST user can view the ips of players.")]
 		public const string viewips = "tshock.rest.viewips";
 	}
 }
